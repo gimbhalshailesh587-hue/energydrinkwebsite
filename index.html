@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VOLTIX // Kinetic Bio-Energy — Zero Sugar, Zero Crash Next-Gen Energy Drink</title>
+  <meta name="description" content="Ignite your peak state with VOLTIX Kinetic Bio-Energy. Infused with 200mg natural green tea caffeine, Lion's Mane nootropics, Himalayan electrolytes, and zero sugar.">
+  <meta name="keywords" content="energy drink, nootropics, clean energy, zero sugar energy, esports energy, focus drink, natural caffeine">
+  
+  <!-- Favicon SVG -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2300FF87'><path d='M13 2L3 14h7v8l10-12h-7z'/></svg>">
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-flavor="lime">
+
+  <!-- Interactive Spark Particles Canvas -->
+  <canvas id="particle-canvas"></canvas>
+
+  <!-- Ambient Light Orbs -->
+  <div class="ambient-glow glow-top-right"></div>
+  <div class="ambient-glow glow-bottom-left"></div>
+
+  <!-- ==========================================================================
+       NAVIGATION BAR
+       ========================================================================== -->
+  <header class="navbar" id="navbar">
+    <div class="container nav-container">
+      <a href="#" class="logo-wrapper" id="nav-brand-logo">
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24">
+            <path d="M13 2L3 14h7v8l10-12h-7z"/>
+          </svg>
+        </div>
+        <div class="logo-text">VOLTIX</div>
+        <span class="logo-sub">KINETIC</span>
+      </a>
+
+      <nav>
+        <ul class="nav-links">
+          <li><a href="#hero" class="nav-link active">Home</a></li>
+          <li><a href="#formula" class="nav-link">The Formula</a></li>
+          <li><a href="#flavors" class="nav-link">Flavors</a></li>
+          <li><a href="#bundle-builder" class="nav-link">Build 12-Pack</a></li>
+          <li><a href="#performance" class="nav-link">Athletes & Esports</a></li>
+          <li><a href="#faq" class="nav-link">FAQ</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <!-- Audio Synthesizer Sound FX Toggle -->
+        <button class="sound-toggle-btn" id="sound-toggle-btn" title="Toggle Interactive Sound Effects">
+          <span class="sound-icon">🔊</span>
+          <span class="sound-label">FX: OFF</span>
+        </button>
+
+        <!-- Cart Open Button -->
+        <button class="cart-icon-btn cart-open-btn" id="header-cart-btn" aria-label="Open Shopping Fuel Cell">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="9" cy="21" r="1"></circle>
+            <circle cx="20" cy="21" r="1"></circle>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+          </svg>
+          <span class="cart-badge" id="cart-badge">1</span>
+        </button>
+
+        <a href="#bundle-builder" class="btn btn-primary" style="padding: 10px 22px; font-size: 0.88rem;">ORDER NOW</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==========================================================================
+       HERO SECTION (3D FLAVOR STAGE)
+       ========================================================================== -->
+  <section class="hero-section" id="hero">
+    <div class="container">
+      <div class="hero-grid">
+        
+        <!-- Left Hero Content -->
+        <div class="hero-content">
+          <div class="badge">
+            <span class="badge-pulse"></span>
+            NEXT-GEN BIO-NOOTROPIC ENERGY
+          </div>
+
+          <h1 class="hero-title">
+            IGNITE YOUR <br>
+            <span class="gradient-text highlight">VELOCITY.</span>
+          </h1>
+
+          <p class="hero-description" id="hero-flavor-desc">
+            Crisp, electrifying mountain yuzu and cold-pressed lime with an effervescent bite that triggers instant alertness. Zero sugar, zero synthetic crash, pure flow state.
+          </p>
+
+          <!-- Interactive Flavor Switcher -->
+          <div class="flavor-selector-box">
+            <div class="flavor-selector-title">
+              <span>SELECT ACTIVE FLAVOR FORMULA</span>
+              <span id="hero-flavor-badge" style="color: var(--theme-primary); font-weight: 700;">CITRUS CHARGE</span>
+            </div>
+            <div class="flavor-buttons">
+              <!-- Lime -->
+              <button class="flavor-btn active" data-select="lime">
+                <span class="flavor-color-pip"></span>
+                <div class="flavor-btn-info">
+                  <span class="flavor-btn-name">Neon Citrus</span>
+                  <span class="flavor-btn-tag">Electrolyte + Lime</span>
+                </div>
+              </button>
+
+              <!-- Berry -->
+              <button class="flavor-btn" data-select="berry">
+                <span class="flavor-color-pip"></span>
+                <div class="flavor-btn-info">
+                  <span class="flavor-btn-name">Cosmic Berry</span>
+                  <span class="flavor-btn-tag">Acai + Frost Berry</span>
+                </div>
+              </button>
+
+              <!-- Orange -->
+              <button class="flavor-btn" data-select="orange">
+                <span class="flavor-color-pip"></span>
+                <div class="flavor-btn-info">
+                  <span class="flavor-btn-name">Solar Flare</span>
+                  <span class="flavor-btn-tag">Blood Orange + Passion</span>
+                </div>
+              </button>
+            </div>
+          </div>
+
+          <!-- Hero Action Buttons -->
+          <div class="hero-cta-group">
+            <button class="btn btn-primary" id="hero-add-pack-btn">
+              ⚡ GET 12-PACK CASE ($34.99)
+            </button>
+            <button class="btn btn-outline" id="hero-add-single-btn">
+              TRY SINGLE CAN ($3.49)
+            </button>
+          </div>
+
+          <!-- Trust Badges -->
+          <div class="hero-guarantee">
+            <div class="guarantee-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span>0g Sugar & 5 Calories</span>
+            </div>
+            <div class="guarantee-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span>Lion's Mane Nootropic</span>
+            </div>
+            <div class="guarantee-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span>6-Hour Clean Plateau</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right 3D Visual Stage with Interactive Can -->
+        <div class="hero-visual-stage" id="hero-visual-stage">
+          <div class="stage-glow-aura"></div>
+          <div class="stage-electric-rings"></div>
+
+          <!-- Floating Spec Badges -->
+          <div class="floating-spec-badge spec-badge-top-left">
+            <div class="spec-icon-box">⚡</div>
+            <div>
+              <div class="spec-text-val">200 MG</div>
+              <div class="spec-text-lbl">Organic Purified Caffeine</div>
+            </div>
+          </div>
+
+          <div class="floating-spec-badge spec-badge-bottom-right">
+            <div class="spec-icon-box">🧠</div>
+            <div>
+              <div class="spec-text-val">1000 MG</div>
+              <div class="spec-text-lbl">Alpha-GPC + L-Theanine</div>
+            </div>
+          </div>
+
+          <!-- 3D Interactive Tilting Can Wrapper -->
+          <div class="can-3d-wrapper" id="can-3d-wrapper">
+            <img 
+              src="assets/can_lime.jpg" 
+              alt="VOLTIX Neon Citrus Energy Can" 
+              class="can-product-img" 
+              id="hero-can-img"
+            >
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       MARQUEE TICKER STRIP
+       ========================================================================== -->
+  <div class="marquee-strip">
+    <div class="marquee-content">
+      <div class="marquee-item"><span>ZERO SUGAR</span><span class="marquee-separator">⚡</span></div>
+      <div class="marquee-item"><span>NATURAL GREEN TEA EXTRACT</span><span class="marquee-separator">⚡</span></div>
+      <div class="marquee-item"><span>LION'S MANE NOOTROPIC</span><span class="marquee-separator">⚡</span></div>
+      <div class="marquee-item"><span>HIMALAYAN ELECTROLYTES</span><span class="marquee-separator">⚡</span></div>
+      <div class="marquee-item"><span>ZERO JITTERS • ZERO CRASH</span><span class="marquee-separator">⚡</span></div>
+      <div class="marquee-item"><span>RAPID NEURAL HYPER-DRIVE</span><span class="marquee-separator">⚡</span></div>
+      <div class="marquee-item"><span>100% VEGAN & GLUTEN FREE</span><span class="marquee-separator">⚡</span></div>
+      <!-- Duplicate for seamless infinite loop -->
+      <div class="marquee-item"><span>ZERO SUGAR</span><span class="marquee-separator">⚡</span></div>
+      <div class="marquee-item"><span>NATURAL GREEN TEA EXTRACT</span><span class="marquee-separator">⚡</span></div>
+      <div class="marquee-item"><span>LION'S MANE NOOTROPIC</span><span class="marquee-separator">⚡</span></div>
+      <div class="marquee-item"><span>HIMALAYAN ELECTROLYTES</span><span class="marquee-separator">⚡</span></div>
+      <div class="marquee-item"><span>ZERO JITTERS • ZERO CRASH</span><span class="marquee-separator">⚡</span></div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       THE FORMULA & COMPARISON GRAPH
+       ========================================================================== -->
+  <section class="section" id="formula">
+    <div class="container">
+      <div class="section-header">
+        <div class="badge">BIOTECH NUTRITION</div>
+        <h2 class="section-title">ENGINEERED FOR <span class="gradient-text">PEAK PERFORMANCE</span></h2>
+        <p class="section-sub">
+          Unlike ordinary energy drinks loaded with 50g of sugar and cheap synthetic taurine, VOLTIX combines clean stimulant delivery with cognitive enhancement.
+        </p>
+      </div>
+
+      <!-- Ingredient Pillars -->
+      <div class="formula-cards-grid">
+        <!-- Card 1 -->
+        <div class="formula-card">
+          <div class="formula-icon">🌿</div>
+          <div class="formula-dose">200MG PURIFIED PHARMACEUTICAL-GRADE</div>
+          <h3 class="formula-name">Green Tea Caffeine</h3>
+          <p class="formula-desc">
+            Sourced exclusively from unfermented green tea leaves. Bound with natural polyphenols for sustained, time-released absorption without the sudden heart spikes.
+          </p>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="formula-card">
+          <div class="formula-icon">🧠</div>
+          <div class="formula-dose">350MG DUAL NOOTROPIC COMPLEX</div>
+          <h3 class="formula-name">Lion's Mane + Alpha-GPC</h3>
+          <p class="formula-desc">
+            Stimulates Nerve Growth Factor (NGF) and elevates acetylcholine levels in the brain to heighten spatial reaction time and eradicate afternoon mental fatigue.
+          </p>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="formula-card">
+          <div class="formula-icon">🧘</div>
+          <div class="formula-dose">150MG 1:1 SYNERGISTIC RATIO</div>
+          <h3 class="formula-name">L-Theanine Amino Acid</h3>
+          <p class="formula-desc">
+            The secret to zero jitters. L-Theanine promotes smooth alpha brain waves, creating a calm, razor-sharp hyper-focus state even during intense pressure.
+          </p>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="formula-card">
+          <div class="formula-icon">⚡</div>
+          <div class="formula-dose">750MG CELLULAR HYDRATION</div>
+          <h3 class="formula-name">Himalayan Salt & Electrolytes</h3>
+          <p class="formula-desc">
+            Electrolyte blend of Magnesium, Potassium, and 84 ionic trace minerals from pure pink salt to restore intracellular hydration and muscular stamina.
+          </p>
+        </div>
+      </div>
+
+      <!-- Energy Curve Comparison Chart -->
+      <div class="chart-container-box">
+        <div class="chart-header">
+          <div class="chart-title-group">
+            <h3>ENERGY & COGNITIVE CURVE COMPARISON</h3>
+            <p>Measured in continuous micro-reflex response & mental focus over an 8-hour testing window.</p>
+          </div>
+          <div class="chart-legend">
+            <div class="legend-item legend-voltix">
+              <span class="legend-line"></span>
+              <span>VOLTIX Sustained Plateau</span>
+            </div>
+            <div class="legend-item legend-coffee">
+              <span class="legend-line"></span>
+              <span>Standard Coffee</span>
+            </div>
+            <div class="legend-item legend-traditional">
+              <span class="legend-line"></span>
+              <span>Sugary Energy Drinks</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Canvas Chart -->
+        <div class="canvas-chart-wrapper">
+          <canvas id="energy-curve-canvas"></canvas>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       FLAVORS SHOWCASE (THE TRIO)
+       ========================================================================== -->
+  <section class="section" id="flavors" style="background: rgba(11, 14, 20, 0.4);">
+    <div class="container">
+      <div class="section-header">
+        <div class="badge">SIGNATURE LINEUP</div>
+        <h2 class="section-title">THREE FORMULAS. <span class="gradient-text">ZERO COMPROMISE.</span></h2>
+        <p class="section-sub">
+          Each flavor is meticulously balanced with botanical infusions, zero sugar, and cold carbonation for maximum crispness.
+        </p>
+      </div>
+
+      <div class="flavors-grid">
+        
+        <!-- Flavor 1: Lime -->
+        <div class="flavor-product-card" data-card-flavor="lime">
+          <span class="flavor-card-pill card-pill-lime">BESTSELLER</span>
+          <div class="flavor-card-image-box">
+            <img src="assets/can_lime.jpg" alt="Neon Citrus Energy Drink" class="flavor-card-img">
+          </div>
+          <h3 class="flavor-card-name">Neon Citrus Charge</h3>
+          <p class="flavor-card-notes">Electrifying mountain yuzu and cold-pressed lime with high-voltage crispness.</p>
+          
+          <div class="flavor-stats-row">
+            <div class="flavor-stat-item">
+              <span class="stat-key">SWEETNESS</span>
+              <span class="stat-val">Crisp Tart (2/5)</span>
+            </div>
+            <div class="flavor-stat-item">
+              <span class="stat-key">CAFFEINE</span>
+              <span class="stat-val">200mg</span>
+            </div>
+            <div class="flavor-stat-item">
+              <span class="stat-key">SUGAR</span>
+              <span class="stat-val">0 Grams</span>
+            </div>
+          </div>
+
+          <div class="flavor-card-footer">
+            <div>
+              <div class="flavor-price">$34.99 <span class="flavor-price-unit">/ 12-Pack</span></div>
+            </div>
+            <button class="btn btn-outline add-flavor-card-btn" data-flavor="lime" style="padding: 10px 18px; font-size: 0.85rem;">
+              + ADD CASE
+            </button>
+          </div>
+        </div>
+
+        <!-- Flavor 2: Berry -->
+        <div class="flavor-product-card" data-card-flavor="berry">
+          <span class="flavor-card-pill card-pill-berry">DEEP FLOW</span>
+          <div class="flavor-card-image-box">
+            <img src="assets/can_berry.jpg" alt="Cosmic Berry Energy Drink" class="flavor-card-img">
+          </div>
+          <h3 class="flavor-card-name">Cosmic Berry Warp</h3>
+          <p class="flavor-card-notes">Wild antioxidant-rich acai and frosted blackberries for laser-sharp tunnel vision.</p>
+          
+          <div class="flavor-stats-row">
+            <div class="flavor-stat-item">
+              <span class="stat-key">SWEETNESS</span>
+              <span class="stat-val">Juicy Berry (3/5)</span>
+            </div>
+            <div class="flavor-stat-item">
+              <span class="stat-key">CAFFEINE</span>
+              <span class="stat-val">200mg</span>
+            </div>
+            <div class="flavor-stat-item">
+              <span class="stat-key">SUGAR</span>
+              <span class="stat-val">0 Grams</span>
+            </div>
+          </div>
+
+          <div class="flavor-card-footer">
+            <div>
+              <div class="flavor-price">$34.99 <span class="flavor-price-unit">/ 12-Pack</span></div>
+            </div>
+            <button class="btn btn-outline add-flavor-card-btn" data-flavor="berry" style="padding: 10px 18px; font-size: 0.85rem;">
+              + ADD CASE
+            </button>
+          </div>
+        </div>
+
+        <!-- Flavor 3: Orange -->
+        <div class="flavor-product-card" data-card-flavor="orange">
+          <span class="flavor-card-pill card-pill-orange">HIGH STAMINA</span>
+          <div class="flavor-card-image-box">
+            <img src="assets/can_orange.jpg" alt="Solar Flare Energy Drink" class="flavor-card-img">
+          </div>
+          <h3 class="flavor-card-name">Solar Flare Rush</h3>
+          <p class="flavor-card-notes">Sun-drenched blood orange sparked with passionfruit for explosive endurance.</p>
+          
+          <div class="flavor-stats-row">
+            <div class="flavor-stat-item">
+              <span class="stat-key">SWEETNESS</span>
+              <span class="stat-val">Citrus Punch (3/5)</span>
+            </div>
+            <div class="flavor-stat-item">
+              <span class="stat-key">CAFFEINE</span>
+              <span class="stat-val">200mg</span>
+            </div>
+            <div class="flavor-stat-item">
+              <span class="stat-key">SUGAR</span>
+              <span class="stat-val">0 Grams</span>
+            </div>
+          </div>
+
+          <div class="flavor-card-footer">
+            <div>
+              <div class="flavor-price">$34.99 <span class="flavor-price-unit">/ 12-Pack</span></div>
+            </div>
+            <button class="btn btn-outline add-flavor-card-btn" data-flavor="orange" style="padding: 10px 18px; font-size: 0.85rem;">
+              + ADD CASE
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       CUSTOM 12-PACK BUNDLE BUILDER
+       ========================================================================== -->
+  <section class="section" id="bundle-builder">
+    <div class="container">
+      <div class="bundle-builder-container">
+        
+        <!-- Left Stepper Controls -->
+        <div class="bundle-left">
+          <div class="badge" style="margin-bottom: 12px;">CUSTOM TASTE LAB</div>
+          <h2 class="bundle-left-title">BUILD YOUR OWN <span class="gradient-text">12-CAN BUNDLE</span></h2>
+          <p style="color: var(--text-secondary); margin-bottom: 24px; font-size: 0.95rem;">
+            Mix and match any proportion of our three signature flavors to suit your daily training and focus regimen.
+          </p>
+
+          <div class="bundle-progress-header">
+            <span>PACK CAPACITY</span>
+            <span id="bundle-total-selected" style="color: var(--theme-primary); font-weight: 700;">12 / 12 CANS SELECTED</span>
+          </div>
+
+          <div class="bundle-progress-bar-bg">
+            <div class="bundle-progress-bar-fill" id="bundle-progress-fill" style="width: 100%;"></div>
+          </div>
+
+          <!-- Stepper Rows -->
+          <div class="bundle-items-selector">
+            
+            <!-- Row 1: Lime -->
+            <div class="bundle-flavor-row">
+              <div class="bundle-row-info">
+                <img src="assets/can_lime.jpg" alt="Lime Thumb" class="bundle-thumb">
+                <div>
+                  <div class="bundle-row-name">Neon Citrus Charge</div>
+                  <div class="bundle-row-sub">Key Lime • Yuzu</div>
+                </div>
+              </div>
+              <div class="bundle-counter">
+                <button class="counter-btn bundle-minus-btn" data-flavor="lime" data-action="minus" aria-label="Decrease Lime">-</button>
+                <span class="counter-num" id="bundle-count-lime">4</span>
+                <button class="counter-btn bundle-plus-btn" data-flavor="lime" data-action="plus" aria-label="Increase Lime">+</button>
+              </div>
+            </div>
+
+            <!-- Row 2: Berry -->
+            <div class="bundle-flavor-row">
+              <div class="bundle-row-info">
+                <img src="assets/can_berry.jpg" alt="Berry Thumb" class="bundle-thumb">
+                <div>
+                  <div class="bundle-row-name">Cosmic Berry Warp</div>
+                  <div class="bundle-row-sub">Acai • Arctic Blackberry</div>
+                </div>
+              </div>
+              <div class="bundle-counter">
+                <button class="counter-btn bundle-minus-btn" data-flavor="berry" data-action="minus" aria-label="Decrease Berry">-</button>
+                <span class="counter-num" id="bundle-count-berry">4</span>
+                <button class="counter-btn bundle-plus-btn" data-flavor="berry" data-action="plus" aria-label="Increase Berry">+</button>
+              </div>
+            </div>
+
+            <!-- Row 3: Orange -->
+            <div class="bundle-flavor-row">
+              <div class="bundle-row-info">
+                <img src="assets/can_orange.jpg" alt="Orange Thumb" class="bundle-thumb">
+                <div>
+                  <div class="bundle-row-name">Solar Flare Rush</div>
+                  <div class="bundle-row-sub">Blood Orange • Passionfruit</div>
+                </div>
+              </div>
+              <div class="bundle-counter">
+                <button class="counter-btn bundle-minus-btn" data-flavor="orange" data-action="minus" aria-label="Decrease Orange">-</button>
+                <span class="counter-num" id="bundle-count-orange">4</span>
+                <button class="counter-btn bundle-plus-btn" data-flavor="orange" data-action="plus" aria-label="Increase Orange">+</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Right Summary Card -->
+        <div class="bundle-summary-box">
+          <h3 class="summary-title">BUNDLE SUMMARY</h3>
+          
+          <div class="summary-list">
+            <div class="summary-line">
+              <span>Standard Retail Value</span>
+              <span style="text-decoration: line-through; color: var(--text-muted);">$41.88</span>
+            </div>
+            <div class="summary-line">
+              <span>Bundle Discount Savings</span>
+              <span style="color: var(--success); font-weight: 700;">-$6.89 (16% OFF)</span>
+            </div>
+            <div class="summary-line">
+              <span>Carbon-Neutral Shipping</span>
+              <span style="color: var(--theme-primary); font-weight: 700;">FREE</span>
+            </div>
+            <div class="summary-total-line">
+              <span>Total Price</span>
+              <span>$34.99</span>
+            </div>
+            <div class="summary-per-can">Just $2.91 per can — 200mg clean focus</div>
+          </div>
+
+          <button class="btn btn-primary" id="bundle-add-to-cart-btn" style="width: 100%; margin-top: 12px;">
+            ⚡ ADD 12-PACK BUNDLE TO CART
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       PERFORMANCE & ESPORTS LIFESTYLE
+       ========================================================================== -->
+  <section class="section" id="performance">
+    <div class="container">
+      <div class="performance-split">
+        
+        <!-- Lifestyle Image with Floating Tag -->
+        <div class="perf-img-container">
+          <img src="assets/hero_lifestyle.jpg" alt="Pro Esports Gaming Setup with Voltix" class="perf-img">
+          <div class="perf-overlay-badge">
+            <span style="color: var(--theme-primary); font-size: 1.4rem;">🎮</span>
+            <div>
+              <div style="font-weight: 700; color: #fff; font-size: 0.9rem;">OFFICIAL FOCUS FUEL</div>
+              <div style="font-size: 0.75rem; color: #94A3B8;">Trusted by 45+ Premier Esports Teams</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Content & Counter Stats -->
+        <div>
+          <div class="badge" style="margin-bottom: 14px;">UNFAIR COGNITIVE ADVANTAGE</div>
+          <h2 style="font-size: clamp(2rem, 3.5vw, 3rem); line-height: 1.1; margin-bottom: 20px;">
+            MILLISECONDS DECIDE <span class="gradient-text">EVERY VICTORY.</span>
+          </h2>
+          <p style="color: var(--text-secondary); line-height: 1.7; margin-bottom: 24px;">
+            Whether you are executing high-stakes competitive esports, coding on an all-night deadline, or pushing your limits in the gym, ordinary sugar drinks slow your neural processing down with post-insulin fatigue. VOLTIX keeps your synaptic firing speed in the optimal alpha zone.
+          </p>
+
+          <div class="stats-counter-grid">
+            <div class="stat-box">
+              <div class="stat-number">99.4%</div>
+              <div class="stat-label">Sustained Focus Retention Rate</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-number">0.0g</div>
+              <div class="stat-label">Added Sugars or Artificial Dyes</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-number">6+ HRS</div>
+              <div class="stat-label">Smooth Alertness Plateau</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-number">4.9 / 5</div>
+              <div class="stat-label">Over 14,000 Verified Reviews</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       ATHLETE & COMMUNITY REVIEWS
+       ========================================================================== -->
+  <section class="section" id="reviews" style="background: rgba(11, 14, 20, 0.5);">
+    <div class="container">
+      <div class="section-header">
+        <div class="badge">COMMUNITY VOICES</div>
+        <h2 class="section-title">TESTED IN <span class="gradient-text">EXTREME CONDITIONS</span></h2>
+        <p class="section-sub">Read what professional racers, software engineers, and gamers say after switching to Voltix.</p>
+      </div>
+
+      <div class="reviews-grid">
+        <!-- Review 1 -->
+        <div class="review-card">
+          <div class="review-stars">★★★★★</div>
+          <p class="review-text">
+            "I used to drink 3 cans of commercial energy drinks during 12-hour programming hackathons and felt jittery and destroyed by 4 PM. Voltix gives me a steady, laser-focused headspace with zero heart pounding. The Citrus flavor is genuinely incredible."
+          </p>
+          <div class="review-author">
+            <div class="author-avatar">MK</div>
+            <div>
+              <div class="author-name">Marcus King</div>
+              <div class="author-role">Senior Systems Architect • Seattle, WA</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Review 2 -->
+        <div class="review-card">
+          <div class="review-stars">★★★★★</div>
+          <p class="review-text">
+            "In professional FPS tournaments, a 20ms reaction delay means losing a round. The combination of Lion's Mane and L-Theanine in Cosmic Berry keeps my tracking hands completely steady without the jitters. Total game changer."
+          </p>
+          <div class="review-author">
+            <div class="author-avatar">EL</div>
+            <div>
+              <div class="author-name">Elena "Valkyrie" Liu</div>
+              <div class="author-role">Pro FPS Athlete • Seoul, South Korea</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Review 3 -->
+        <div class="review-card">
+          <div class="review-stars">★★★★★</div>
+          <p class="review-text">
+            "The Himalayan salt and coconut water electrolytes give this an immediate hydration punch that regular canned drinks completely ignore. Solar Flare is my go-to pre-workout. 10/10 flavor, zero artificial chemical aftertaste."
+          </p>
+          <div class="review-author">
+            <div class="author-avatar">DV</div>
+            <div>
+              <div class="author-name">David Vance</div>
+              <div class="author-role">Crossfit Competitor • Austin, TX</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       FAQ ACCORDION
+       ========================================================================== -->
+  <section class="section" id="faq">
+    <div class="container">
+      <div class="section-header">
+        <div class="badge">CLARITY & SCIENCE</div>
+        <h2 class="section-title">FREQUENTLY ASKED <span class="gradient-text">QUESTIONS</span></h2>
+        <p class="section-sub">Everything you need to know about our ingredients, delivery, and guarantee.</p>
+      </div>
+
+      <div class="faq-accordion">
+        
+        <div class="faq-item active">
+          <button class="faq-question">
+            <span>What makes VOLTIX fundamentally different from other energy drinks?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            Traditional energy drinks rely on high doses of refined sucrose or synthetic caffeine anhydrous that cause rapid spikes in insulin and severe subsequent energy crashes. VOLTIX uses organic green tea caffeine paired in a 1:1 ratio with L-Theanine and Lion's Mane mushroom extract. This creates sustained neural stimulation for over 6 hours with zero post-caffeine crash.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question">
+            <span>Is there any sugar, aspartame, or artificial food dyes in Voltix?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            None at all. VOLTIX is 100% zero sugar, keto-friendly, and naturally sweetened with monk fruit and organic stevia rebaudiana leaf extract. We use zero artificial color dyes (Red 40, Yellow 5)—our colors are naturally derived from beta-carotene, spirulina, and purple carrot juice.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question">
+            <span>How much caffeine is contained in each 355ml slim can?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            Each 355ml can contains exactly 200mg of naturally extracted, purified green tea caffeine—equivalent to approximately two cups of premium brewed coffee, but delivered in a smooth, time-released matrix with electrolytes.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question">
+            <span>What is your 100% "Zero Jitters" Money-Back Guarantee?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            If you order a 12-pack and don't feel noticeably cleaner, smoother focus compared to your regular energy drink or coffee, simply send us an email within 30 days. We'll issue a full refund immediately—you can even keep the remaining cans!
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       VIP DROP CLUB NEWSLETTER
+       ========================================================================== -->
+  <section class="section" style="padding-top: 0;">
+    <div class="container">
+      <div class="newsletter-banner">
+        <div class="badge" style="margin-bottom: 12px;">SECRET FORMULA VAULT</div>
+        <h2 style="font-size: clamp(1.8rem, 3.2vw, 2.6rem); margin-bottom: 12px;">
+          JOIN THE VOLTIX <span class="gradient-text">DROP SQUAD</span>
+        </h2>
+        <p style="color: var(--text-secondary); max-width: 520px; margin: 0 auto; font-size: 0.95rem;">
+          Get priority access to limited edition seasonal flavor drops, pro athlete tournaments, and unlock 20% off your first order.
+        </p>
+
+        <form class="newsletter-form" id="newsletter-form">
+          <input type="email" placeholder="Enter your email address..." class="newsletter-input" required>
+          <button type="submit" class="btn btn-primary" style="padding: 14px 26px;">
+            JOIN SQUAD
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       FOOTER
+       ========================================================================== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-top">
+        
+        <!-- Brand Info -->
+        <div>
+          <a href="#" class="logo-wrapper">
+            <div class="logo-icon">
+              <svg viewBox="0 0 24 24"><path d="M13 2L3 14h7v8l10-12h-7z"/></svg>
+            </div>
+            <div class="logo-text">VOLTIX</div>
+            <span class="logo-sub">KINETIC</span>
+          </a>
+          <p class="footer-brand-desc">
+            The next generation of bio-enhanced kinetic energy. Zero sugar, natural nootropics, and premium electrolytes crafted for extreme human potential.
+          </p>
+        </div>
+
+        <!-- Col 1 -->
+        <div>
+          <h4 class="footer-col-title">Flavors</h4>
+          <ul class="footer-links-list">
+            <li><a href="#hero">Neon Citrus Charge</a></li>
+            <li><a href="#hero">Cosmic Berry Warp</a></li>
+            <li><a href="#hero">Solar Flare Rush</a></li>
+            <li><a href="#bundle-builder">Custom 12-Pack</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 2 -->
+        <div>
+          <h4 class="footer-col-title">Science</h4>
+          <ul class="footer-links-list">
+            <li><a href="#formula">Green Tea Caffeine</a></li>
+            <li><a href="#formula">Lion's Mane Nootropics</a></li>
+            <li><a href="#formula">L-Theanine Synergy</a></li>
+            <li><a href="#formula">Ionic Electrolytes</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 3 -->
+        <div>
+          <h4 class="footer-col-title">Company</h4>
+          <ul class="footer-links-list">
+            <li><a href="#performance">Esports Partnerships</a></li>
+            <li><a href="#reviews">Verified Reviews</a></li>
+            <li><a href="#faq">FAQ & Guarantee</a></li>
+            <li><a href="#">Wholesale & Retailers</a></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="footer-bottom">
+        <div>&copy; 2026 VOLTIX KINETIC LABS INC. ALL RIGHTS RESERVED.</div>
+        <div style="display: flex; gap: 20px;">
+          <span>Privacy Policy</span>
+          <span>Terms of Service</span>
+          <span>FDA Compliance Statement</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==========================================================================
+       SLIDEOUT CART DRAWER
+       ========================================================================== -->
+  <div class="cart-overlay" id="cart-overlay">
+    <aside class="cart-drawer" id="cart-drawer">
+      <div class="cart-header">
+        <h3 class="cart-title">
+          <span>⚡</span>
+          <span>FUEL CELL CART</span>
+        </h3>
+        <button class="close-cart-btn" id="cart-close-btn" aria-label="Close Cart">&times;</button>
+      </div>
+
+      <div class="cart-body" id="cart-body">
+        <!-- Rendered dynamically by script.js -->
+      </div>
+
+      <div class="cart-footer">
+        <div class="cart-subtotal-row">
+          <span>Subtotal</span>
+          <span id="cart-subtotal" style="font-family: var(--font-mono);">$34.99</span>
+        </div>
+        <div class="cart-subtotal-row">
+          <span>Express Shipping</span>
+          <span style="color: var(--theme-primary); font-weight: 700;">FREE</span>
+        </div>
+        <div class="cart-total-row">
+          <span>Total</span>
+          <span id="cart-total" style="color: var(--theme-primary);">$34.99</span>
+        </div>
+        <button class="btn btn-primary" id="checkout-btn" style="width: 100%; font-size: 1.05rem;">
+          ⚡ PROCEED TO CHECKOUT
+        </button>
+      </div>
+    </aside>
+  </div>
+
+  <!-- ==========================================================================
+       INTERACTIVE TOAST NOTIFICATION
+       ========================================================================== -->
+  <div class="toast-notice" id="toast-notice">
+    <span style="font-size: 1.2rem;">⚡</span>
+    <span class="toast-msg" style="font-weight: 600; font-size: 0.9rem;">Item added to cart!</span>
+  </div>
+
+  <!-- JavaScript -->
+  <script src="script.js"></script>
+</body>
+</html>
