@@ -1093,6 +1093,393 @@
   </div>
 
   <!-- ==========================================================================
+       REALISTIC STEP-BY-STEP ONLINE CHECKOUT MODAL
+       ========================================================================== -->
+  <div class="checkout-modal-overlay" id="checkout-modal-overlay">
+    <div class="checkout-modal-window" id="checkout-modal-window">
+      
+      <!-- Modal Top Header -->
+      <div class="checkout-modal-header">
+        <div class="checkout-header-brand">
+          <div class="logo-icon-small">
+            <svg viewBox="0 0 24 24"><path d="M13 2L3 14h7v8l10-12h-7z"/></svg>
+          </div>
+          <div>
+            <div class="checkout-title-text">VOLTIX SECURE CHECKOUT</div>
+            <div class="checkout-secure-badge">🔒 256-Bit SSL Encrypted Kinetic Bio-Vault</div>
+          </div>
+        </div>
+        <button class="checkout-modal-close-btn" id="checkout-modal-close-btn" aria-label="Close Checkout">&times;</button>
+      </div>
+
+      <!-- Step Progress Stepper Bar -->
+      <div class="checkout-stepper-bar">
+        <div class="checkout-step-item active" id="step-node-1" data-step-indicator="1">
+          <div class="step-bubble">1</div>
+          <span class="step-name">Shipping</span>
+        </div>
+        <div class="checkout-step-line" id="step-line-1"></div>
+        <div class="checkout-step-item" id="step-node-2" data-step-indicator="2">
+          <div class="step-bubble">2</div>
+          <span class="step-name">Payment</span>
+        </div>
+        <div class="checkout-step-line" id="step-line-2"></div>
+        <div class="checkout-step-item" id="step-node-3" data-step-indicator="3">
+          <div class="step-bubble">3</div>
+          <span class="step-name">Review</span>
+        </div>
+      </div>
+
+      <!-- Modal Body (Two-Column Layout) -->
+      <div class="checkout-modal-body">
+        
+        <!-- Left: Dynamic Steps Flow -->
+        <div class="checkout-main-flow">
+          
+          <!-- STEP 1: Shipping & Delivery Address -->
+          <div class="checkout-step-panel active" id="checkout-step-1">
+            <div class="step-panel-header">
+              <h3 class="step-heading">📦 Delivery Address & Contact</h3>
+              <p class="step-subheading">Enter your shipping details for fast, cold-insulated delivery.</p>
+            </div>
+
+            <form id="shipping-form" class="checkout-form-grid" novalidate>
+              <div class="form-row form-row-2">
+                <div class="form-group">
+                  <label for="ship-fname">First Name *</label>
+                  <input type="text" id="ship-fname" class="checkout-input" placeholder="e.g. Sailesh" required>
+                  <span class="field-error" id="err-ship-fname"></span>
+                </div>
+                <div class="form-group">
+                  <label for="ship-lname">Last Name *</label>
+                  <input type="text" id="ship-lname" class="checkout-input" placeholder="e.g. Kumar" required>
+                  <span class="field-error" id="err-ship-lname"></span>
+                </div>
+              </div>
+
+              <div class="form-row form-row-2">
+                <div class="form-group">
+                  <label for="ship-email">Email Address (for live tracking & receipt) *</label>
+                  <input type="email" id="ship-email" class="checkout-input" placeholder="sailesh@example.com" required>
+                  <span class="field-error" id="err-ship-email"></span>
+                </div>
+                <div class="form-group">
+                  <label for="ship-phone">Mobile Phone (for courier delivery SMS) *</label>
+                  <input type="tel" id="ship-phone" class="checkout-input" placeholder="+1 (555) 019-2834" required>
+                  <span class="field-error" id="err-ship-phone"></span>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="ship-address">Street Address *</label>
+                <input type="text" id="ship-address" class="checkout-input" placeholder="Flat, house no., building, company, apartment" required>
+                <span class="field-error" id="err-ship-address"></span>
+              </div>
+
+              <div class="form-row form-row-3">
+                <div class="form-group">
+                  <label for="ship-city">City *</label>
+                  <input type="text" id="ship-city" class="checkout-input" placeholder="e.g. Los Angeles" required>
+                  <span class="field-error" id="err-ship-city"></span>
+                </div>
+                <div class="form-group">
+                  <label for="ship-state">State / Province *</label>
+                  <input type="text" id="ship-state" class="checkout-input" placeholder="e.g. CA" required>
+                  <span class="field-error" id="err-ship-state"></span>
+                </div>
+                <div class="form-group">
+                  <label for="ship-zip">Postal / PIN Code *</label>
+                  <input type="text" id="ship-zip" class="checkout-input" placeholder="90001" required>
+                  <span class="field-error" id="err-ship-zip"></span>
+                </div>
+              </div>
+
+              <!-- Shipping Speed Radio Option Cards -->
+              <div class="form-group" style="margin-top: 14px;">
+                <label class="form-label-header">Shipping & Handling Speed</label>
+                <div class="shipping-speed-options">
+                  <label class="speed-option active" id="speed-opt-std">
+                    <input type="radio" name="shipping-speed" value="standard" checked>
+                    <div class="speed-option-info">
+                      <span class="speed-title">⚡ Standard Bio-Transit (2-3 Business Days)</span>
+                      <span class="speed-sub">Carbon-Neutral Cold-Insulated Packaging</span>
+                    </div>
+                    <span class="speed-price">FREE</span>
+                  </label>
+                  <label class="speed-option" id="speed-opt-exp">
+                    <input type="radio" name="shipping-speed" value="express">
+                    <div class="speed-option-info">
+                      <span class="speed-title">🚀 Hyper-Velocity Flight Courier (Next Day by 10 AM)</span>
+                      <span class="speed-sub">Priority Flight Dispatch + Extra Sub-Zero Insulation</span>
+                    </div>
+                    <span class="speed-price">+$4.99</span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="step-nav-actions">
+                <button type="button" class="btn btn-outline" id="step-1-cancel-btn">Back to Cart</button>
+                <button type="submit" class="btn btn-primary" id="step-1-next-btn">Continue to Payment ➔</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- STEP 2: Payment Method Selection -->
+          <div class="checkout-step-panel" id="checkout-step-2">
+            <div class="step-panel-header">
+              <h3 class="step-heading">💳 Select Payment Method</h3>
+              <p class="step-subheading">All transactions are encrypted with 256-bit bank-grade bio-security.</p>
+            </div>
+
+            <!-- Payment Method Tabs -->
+            <div class="payment-tabs">
+              <button type="button" class="payment-tab active" data-payment-tab="card">
+                <span>💳</span> Credit / Debit Card
+              </button>
+              <button type="button" class="payment-tab" data-payment-tab="upi">
+                <span>⚡</span> UPI / Instant App
+              </button>
+              <button type="button" class="payment-tab" data-payment-tab="cod">
+                <span>💵</span> Cash on Delivery
+              </button>
+            </div>
+
+            <!-- Tab 1: Credit / Debit Card Form -->
+            <form id="card-payment-form" class="payment-method-panel active" data-panel="card">
+              <div class="form-group">
+                <label for="card-num">Card Number *</label>
+                <div class="input-with-icon">
+                  <input type="text" id="card-num" class="checkout-input" placeholder="4532  ••••  ••••  8892" maxlength="19" required>
+                  <span class="card-icon-indicator" id="card-brand-icon">💳</span>
+                </div>
+                <span class="field-error" id="err-card-num"></span>
+              </div>
+
+              <div class="form-row form-row-2">
+                <div class="form-group">
+                  <label for="card-name">Cardholder Name *</label>
+                  <input type="text" id="card-name" class="checkout-input" placeholder="e.g. Sailesh Kumar" required>
+                  <span class="field-error" id="err-card-name"></span>
+                </div>
+                <div class="form-row form-row-2" style="margin: 0; gap: 8px;">
+                  <div class="form-group">
+                    <label for="card-exp">Expiry *</label>
+                    <input type="text" id="card-exp" class="checkout-input" placeholder="MM/YY" maxlength="5" required>
+                    <span class="field-error" id="err-card-exp"></span>
+                  </div>
+                  <div class="form-group">
+                    <label for="card-cvv">CVV *</label>
+                    <input type="password" id="card-cvv" class="checkout-input" placeholder="•••" maxlength="4" required>
+                    <span class="field-error" id="err-card-cvv"></span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card-security-note">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                <span>Encrypted with TLS 1.3. Your payment credentials are never stored on plaintext servers.</span>
+              </div>
+            </form>
+
+            <!-- Tab 2: UPI / QR / Wallet -->
+            <div class="payment-method-panel" data-panel="upi">
+              <div class="upi-box">
+                <div class="upi-badge-row">
+                  <span class="upi-badge">Google Pay</span>
+                  <span class="upi-badge">PhonePe</span>
+                  <span class="upi-badge">Apple Pay</span>
+                  <span class="upi-badge">Paytm</span>
+                  <span class="upi-badge">BHIM</span>
+                </div>
+                <div class="form-group" style="margin-top: 14px;">
+                  <label for="upi-id">Enter your UPI ID / Virtual Payment Address *</label>
+                  <input type="text" id="upi-id" class="checkout-input" placeholder="username@okhdfcbank">
+                  <span class="field-error" id="err-upi-id"></span>
+                </div>
+                <p class="upi-subnote">
+                  A payment request collect notification will be triggered to your UPI app for instant one-click approval.
+                </p>
+              </div>
+            </div>
+
+            <!-- Tab 3: Cash / Pay on Delivery -->
+            <div class="payment-method-panel" data-panel="cod">
+              <div class="cod-box">
+                <div class="cod-icon">💵</div>
+                <div>
+                  <h4 class="cod-title">Pay at Your Doorstep (Cash or UPI Scan)</h4>
+                  <p class="cod-desc">
+                    No advance payment required. You can pay via Cash or scan the courier agent's QR code when your insulated VOLTIX case arrives.
+                  </p>
+                  <div class="cod-pill">✓ 0% Extra Cash-on-Delivery Surcharge</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="step-nav-actions">
+              <button type="button" class="btn btn-outline" id="step-2-back-btn">⬅ Back to Shipping</button>
+              <button type="button" class="btn btn-primary" id="step-2-next-btn">Review Order ➔</button>
+            </div>
+          </div>
+
+          <!-- STEP 3: Review Order & Final Confirmation -->
+          <div class="checkout-step-panel" id="checkout-step-3">
+            <div class="step-panel-header">
+              <h3 class="step-heading">🔍 Final Order Verification</h3>
+              <p class="step-subheading">Double check your delivery address and payment choice before placing the order.</p>
+            </div>
+
+            <!-- Review Meta Cards -->
+            <div class="review-meta-grid">
+              <div class="review-meta-card">
+                <div class="review-meta-header">
+                  <span>📍 DELIVER TO</span>
+                  <button type="button" class="review-edit-btn" id="edit-shipping-btn">Edit</button>
+                </div>
+                <div class="review-meta-val" id="review-shipping-summary">
+                  Sailesh Kumar<br>
+                  123 Kinetic Ave, Apt 4B, Los Angeles, CA 90001<br>
+                  +1 (555) 019-2834
+                </div>
+              </div>
+
+              <div class="review-meta-card">
+                <div class="review-meta-header">
+                  <span>💳 PAYMENT & TRANSIT</span>
+                  <button type="button" class="review-edit-btn" id="edit-payment-btn">Edit</button>
+                </div>
+                <div class="review-meta-val" id="review-payment-summary">
+                  Credit Card (Ending in •••• 8892)<br>
+                  Standard Bio-Transit (FREE, 2-3 Days)
+                </div>
+              </div>
+            </div>
+
+            <!-- Detailed items review -->
+            <div class="review-items-box">
+              <h4 class="review-items-title">ITEMS TO BE DISPATCHED</h4>
+              <div class="review-items-list" id="review-items-list">
+                <!-- Rendered dynamically -->
+              </div>
+            </div>
+
+            <!-- Place Order Final Action -->
+            <div class="step-nav-actions" style="margin-top: 24px;">
+              <button type="button" class="btn btn-outline" id="step-3-back-btn">⬅ Back</button>
+              <button type="button" class="btn btn-primary" id="place-order-btn" style="flex: 1; font-size: 1.05rem;">
+                ⚡ PLACE ORDER NOW (<span id="place-order-total-btn">$34.99</span>)
+              </button>
+            </div>
+          </div>
+
+          <!-- STEP 4: Order Placed Successfully (Celebration Screen) -->
+          <div class="checkout-step-panel" id="checkout-step-success">
+            <div class="order-success-card">
+              <div class="success-icon-badge">⚡</div>
+              <div class="success-badge-pulse">ORDER SUCCESSFULLY PLACED</div>
+              <h2 class="success-title">FUEL CELL INITIALIZED!</h2>
+              <p class="success-desc">
+                Thank you, <strong id="success-customer-name" style="color: var(--text-white);">Sailesh</strong>! Your kinetic energy order has been registered in our cold-pack fulfillment network. A tracking email has been sent.
+              </p>
+
+              <div class="order-receipt-box">
+                <div class="receipt-row">
+                  <span class="receipt-key">Order Number:</span>
+                  <span class="receipt-val highlight" id="receipt-order-id">#VLX-893421</span>
+                </div>
+                <div class="receipt-row">
+                  <span class="receipt-key">Estimated Delivery:</span>
+                  <span class="receipt-val" id="receipt-delivery-date">Nov 2, 2026 (2-3 Business Days)</span>
+                </div>
+                <div class="receipt-row">
+                  <span class="receipt-key">Payment Status:</span>
+                  <span class="receipt-val" id="receipt-payment-status" style="color: var(--success); font-weight: 700;">CONFIRMED (PAID)</span>
+                </div>
+                <div class="receipt-row">
+                  <span class="receipt-key">Shipping Method:</span>
+                  <span class="receipt-val" id="receipt-shipping-method">Standard Bio-Transit</span>
+                </div>
+                <div class="receipt-row total-row">
+                  <span class="receipt-key">Total Paid:</span>
+                  <span class="receipt-val" id="receipt-total-amount" style="color: var(--theme-primary); font-weight: 800; font-size: 1.15rem;">$34.99</span>
+                </div>
+              </div>
+
+              <!-- Itemized list preview -->
+              <div class="receipt-items-container" id="receipt-items-preview">
+                <!-- Rendered dynamically -->
+              </div>
+
+              <div class="success-actions">
+                <button type="button" class="btn btn-primary" id="success-continue-btn">
+                  ⚡ CONTINUE SHOPPING
+                </button>
+                <button type="button" class="btn btn-outline" id="success-print-btn">
+                  🖨️ PRINT RECEIPT
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right: Live Sticky Order Summary & Promo Code Box -->
+        <div class="checkout-sidebar-summary" id="checkout-sidebar">
+          <h4 class="summary-box-title">ORDER SUMMARY</h4>
+          
+          <!-- Mini items list -->
+          <div class="checkout-mini-items" id="checkout-mini-items">
+            <!-- Rendered dynamically -->
+          </div>
+
+          <!-- Promo Code Input -->
+          <div class="promo-box">
+            <div class="promo-input-row">
+              <input type="text" id="promo-code-input" class="promo-input" placeholder="Promo code (e.g. VOLTIX20)">
+              <button type="button" class="promo-apply-btn" id="promo-apply-btn">APPLY</button>
+            </div>
+            <div class="promo-hint">Try code: <strong>VOLTIX20</strong> (20% off) or <strong>REFLEX15</strong></div>
+            <div class="promo-message" id="promo-message"></div>
+          </div>
+
+          <!-- Cost Calculation Table -->
+          <div class="checkout-cost-table">
+            <div class="cost-row">
+              <span>Subtotal</span>
+              <span id="co-subtotal">$34.99</span>
+            </div>
+            <div class="cost-row" id="co-discount-row" style="display: none; color: var(--success);">
+              <span>Discount</span>
+              <span id="co-discount">-$7.00</span>
+            </div>
+            <div class="cost-row">
+              <span>Shipping</span>
+              <span id="co-shipping" style="color: var(--theme-primary); font-weight: 700;">FREE</span>
+            </div>
+            <div class="cost-row">
+              <span>Estimated Sales Tax</span>
+              <span id="co-tax">$0.00</span>
+            </div>
+            <div class="cost-total-row">
+              <span>Total</span>
+              <span id="co-total" style="color: var(--theme-primary); font-family: var(--font-display);">$34.99</span>
+            </div>
+          </div>
+
+          <!-- Trust Badges -->
+          <div class="checkout-trust-guarantee">
+            <div class="trust-pill">⚡ 100% Zero-Crash Guarantee</div>
+            <div class="trust-pill">🛡️ 30-Day Money Back</div>
+            <div class="trust-pill">🌱 100% Recyclable Aluminum</div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==========================================================================
        INTERACTIVE TOAST NOTIFICATION
        ========================================================================== -->
   <div class="toast-notice" id="toast-notice">
