@@ -836,19 +836,721 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Checkout Simulator
-  if (checkoutBtn) {
-    checkoutBtn.addEventListener('click', () => {
+  // ==========================================================================
+  // REALISTIC MULTI-STEP ONLINE CHECKOUT ENGINE
+  // ==========================================================================
+  const checkoutModalOverlay = document.getElementById('checkout-modal-overlay');
+  const checkoutModalCloseBtn = document.getElementById('checkout-modal-close-btn');
+  const checkoutStepperBar = document.querySelector('.checkout-stepper-bar');
+
+  // Step Indicators & Connection Lines
+  const stepNodes = {
+    1: document.getElementById('step-node-1'),
+    2: document.getElementById('step-node-2'),
+    3: document.getElementById('step-node-3')
+  };
+  const stepLine1 = document.getElementById('step-line-1');
+  const stepLine2 = document.getElementById('step-line-2');
+
+  // Step Panels
+  const checkoutPanels = {
+    1: document.getElementById('checkout-step-1'),
+    2: document.getElementById('checkout-step-2'),
+    3: document.getElementById('checkout-step-3'),
+    success: document.getElementById('checkout-step-success')
+  };
+
+  // Checkout State
+  let currentCheckoutStep = 1;
+  let checkoutShipping = {
+    fname: '',
+    lname: '',
+    email: '',
+    phone: '',
+    address: '',
+    city: '',
+    state: '',
+    zip: '',
+    speed: 'standard',
+    speedPrice: 0.00
+  };
+  let checkoutPayment = {
+    method: 'card',
+    cardNum: '',
+    cardName: '',
+    cardExp: '',
+    cardCvv: '',
+    upiId: ''
+  };
+  let checkoutPromo = {
+    code: '',
+    discountPercent: 0
+  };
+
+  // Elements - Step 1: Shipping
+  const shippingForm = document.getElementById('shipping-form');
+  const shipFname = document.getElementById('ship-fname');
+  const shipLname = document.getElementById('ship-lname');
+  const shipEmail = document.getElementById('ship-email');
+  const shipPhone = document.getElementById('ship-phone');
+  const shipAddress = document.getElementById('ship-address');
+  const shipCity = document.getElementById('ship-city');
+  const shipState = document.getElementById('ship-state');
+  const shipZip = document.getElementById('ship-zip');
+  const step1CancelBtn = document.getElementById('step-1-cancel-btn');
+  const speedOptStd = document.getElementById('speed-opt-std');
+  const speedOptExp = document.getElementById('speed-opt-exp');
+
+  // Elements - Step 2: Payment
+  const paymentTabs = document.querySelectorAll('.payment-tab');
+  const paymentPanels = document.querySelectorAll('.payment-method-panel');
+  const cardNum = document.getElementById('card-num');
+  const cardBrandIcon = document.getElementById('card-brand-icon');
+  const cardName = document.getElementById('card-name');
+  const cardExp = document.getElementById('card-exp');
+  const cardCvv = document.getElementById('card-cvv');
+  const upiId = document.getElementById('upi-id');
+  const step2BackBtn = document.getElementById('step-2-back-btn');
+  const step2NextBtn = document.getElementById('step-2-next-btn');
+
+  // Elements - Step 3: Review
+  const step3BackBtn = document.getElementById('step-3-back-btn');
+  const editShippingBtn = document.getElementById('edit-shipping-btn');
+  const editPaymentBtn = document.getElementById('edit-payment-btn');
+  const placeOrderBtn = document.getElementById('place-order-btn');
+  const placeOrderTotalBtn = document.getElementById('place-order-total-btn');
+  const reviewShippingSummary = document.getElementById('review-shipping-summary');
+  const reviewPaymentSummary = document.getElementById('review-payment-summary');
+  const reviewItemsList = document.getElementById('review-items-list');
+
+  // Elements - Step 4: Success Screen
+  const successCustomerName = document.getElementById('success-customer-name');
+  const receiptOrderId = document.getElementById('receipt-order-id');
+  const receiptDeliveryDate = document.getElementById('receipt-delivery-date');
+  const receiptPaymentStatus = document.getElementById('receipt-payment-status');
+  const receiptShippingMethod = document.getElementById('receipt-shipping-method');
+  const receiptTotalAmount = document.getElementById('receipt-total-amount');
+  const receiptItemsPreview = document.getElementById('receipt-items-preview');
+  const successContinueBtn = document.getElementById('success-continue-btn');
+  const successPrintBtn = document.getElementById('success-print-btn');
+
+  // Elements - Sidebar Summary & Promo
+  const checkoutMiniItems = document.getElementById('checkout-mini-items');
+  const promoCodeInput = document.getElementById('promo-code-input');
+  const promoApplyBtn = document.getElementById('promo-apply-btn');
+  const promoMessage = document.getElementById('promo-message');
+  const coSubtotal = document.getElementById('co-subtotal');
+  const coDiscountRow = document.getElementById('co-discount-row');
+  const coDiscount = document.getElementById('co-discount');
+  const coShipping = document.getElementById('co-shipping');
+  const coTax = document.getElementById('co-tax');
+  const coTotal = document.getElementById('co-total');
+
+  // Open Checkout Modal
+  function openCheckoutModal() {
+    if (!cart || cart.length === 0) {
+      showToast('⚠️ Your fuel cell is empty! Add an energy drink first.');
+      playSound('beep', 320, 0.08);
+      return;
+    }
+    closeCart();
+    setCheckoutStep(1);
+    updateCheckoutSidebar();
+    if (checkoutModalOverlay) {
+      checkoutModalOverlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      playSound('beep', 580, 0.06);
+    }
+  }
+
+  // Close Checkout Modal
+  function closeCheckoutModal() {
+    if (checkoutModalOverlay) {
+      checkoutModalOverlay.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+  }
+
+  // Set Current Active Step
+  function setCheckoutStep(step) {
+    currentCheckoutStep = step;
+
+    // Switch panels
+    Object.keys(checkoutPanels).forEach(key => {
+      if (checkoutPanels[key]) {
+        if (key === String(step)) {
+          checkoutPanels[key].classList.add('active');
+        } else {
+          checkoutPanels[key].classList.remove('active');
+        }
+      }
+    });
+
+    if (step === 'success') {
+      if (checkoutStepperBar) checkoutStepperBar.style.display = 'none';
+      return;
+    } else {
+      if (checkoutStepperBar) checkoutStepperBar.style.display = 'flex';
+    }
+
+    // Update Stepper Nodes and connecting glow lines
+    if (step === 1) {
+      if (stepNodes[1]) { stepNodes[1].className = 'checkout-step-item active'; }
+      if (stepNodes[2]) { stepNodes[2].className = 'checkout-step-item'; }
+      if (stepNodes[3]) { stepNodes[3].className = 'checkout-step-item'; }
+      if (stepLine1) stepLine1.classList.remove('active');
+      if (stepLine2) stepLine2.classList.remove('active');
+    } else if (step === 2) {
+      if (stepNodes[1]) { stepNodes[1].className = 'checkout-step-item completed'; }
+      if (stepNodes[2]) { stepNodes[2].className = 'checkout-step-item active'; }
+      if (stepNodes[3]) { stepNodes[3].className = 'checkout-step-item'; }
+      if (stepLine1) stepLine1.classList.add('active');
+      if (stepLine2) stepLine2.classList.remove('active');
+    } else if (step === 3) {
+      if (stepNodes[1]) { stepNodes[1].className = 'checkout-step-item completed'; }
+      if (stepNodes[2]) { stepNodes[2].className = 'checkout-step-item completed'; }
+      if (stepNodes[3]) { stepNodes[3].className = 'checkout-step-item active'; }
+      if (stepLine1) stepLine1.classList.add('active');
+      if (stepLine2) stepLine2.classList.add('active');
+      populateReviewStep();
+    }
+
+    // Scroll checkout content to top
+    const modalBody = document.querySelector('.checkout-modal-body');
+    if (modalBody) modalBody.scrollTop = 0;
+  }
+
+  // Cost Computations
+  function getCartSubtotal() {
+    return cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+  }
+
+  function getCheckoutTotals() {
+    const subtotal = getCartSubtotal();
+    const discount = subtotal * (checkoutPromo.discountPercent / 100);
+    const shipping = checkoutShipping.speedPrice;
+    const tax = 0.00;
+    const grandTotal = Math.max(0, subtotal - discount + shipping + tax);
+    return { subtotal, discount, shipping, tax, grandTotal };
+  }
+
+  // Render Sidebar Mini-items and Cost Calculation
+  function updateCheckoutSidebar() {
+    if (!checkoutMiniItems) return;
+    checkoutMiniItems.innerHTML = '';
+
+    cart.forEach(item => {
+      const itemRow = document.createElement('div');
+      itemRow.className = 'co-mini-item';
+      itemRow.innerHTML = `
+        <img src="${item.image}" alt="${item.name}" class="co-mini-thumb">
+        <div class="co-mini-info">
+          <div class="co-mini-name">${item.name}</div>
+          <div class="co-mini-qty">Qty: ${item.qty}</div>
+        </div>
+        <div class="co-mini-price">$${(item.price * item.qty).toFixed(2)}</div>
+      `;
+      checkoutMiniItems.appendChild(itemRow);
+    });
+
+    const { subtotal, discount, shipping, grandTotal } = getCheckoutTotals();
+
+    if (coSubtotal) coSubtotal.textContent = `$${subtotal.toFixed(2)}`;
+
+    if (coDiscountRow && coDiscount) {
+      if (discount > 0) {
+        coDiscountRow.style.display = 'flex';
+        coDiscount.textContent = `-$${discount.toFixed(2)} (${checkoutPromo.code})`;
+      } else {
+        coDiscountRow.style.display = 'none';
+      }
+    }
+
+    if (coShipping) {
+      if (shipping === 0) {
+        coShipping.textContent = 'FREE';
+        coShipping.style.color = 'var(--theme-primary)';
+      } else {
+        coShipping.textContent = `$${shipping.toFixed(2)}`;
+        coShipping.style.color = 'var(--text-white)';
+      }
+    }
+
+    if (coTotal) coTotal.textContent = `$${grandTotal.toFixed(2)}`;
+    if (placeOrderTotalBtn) placeOrderTotalBtn.textContent = `$${grandTotal.toFixed(2)}`;
+  }
+
+  // Promo Code Application
+  function applyPromoCode() {
+    if (!promoCodeInput) return;
+    const code = promoCodeInput.value.trim().toUpperCase();
+    if (!code) {
+      setPromoMessage('Please enter a coupon code.', 'error');
+      return;
+    }
+
+    if (code === 'VOLTIX20') {
+      checkoutPromo = { code: 'VOLTIX20', discountPercent: 20 };
+      setPromoMessage('⚡ VOLTIX20 applied: 20% Bio-Speed discount activated!', 'success');
       playSound('chime');
-      showToast('🚀 Order Initialized! Redirecting to secure checkout...');
-      setTimeout(() => {
-        alert('⚡ VOLTIX DEMO CHECKOUT\n\nThank you for fueling with Voltix Kinetic Bio-Energy!\n\nYour order has been recorded in this demo showcase.');
-        cart = [];
-        renderCart();
-        closeCart();
-      }, 700);
+    } else if (code === 'REFLEX15') {
+      checkoutPromo = { code: 'REFLEX15', discountPercent: 15 };
+      setPromoMessage('⚡ REFLEX15 applied: 15% discount activated!', 'success');
+      playSound('chime');
+    } else {
+      setPromoMessage('✕ Invalid code. Try VOLTIX20 or REFLEX15.', 'error');
+      playSound('beep', 300, 0.08);
+      return;
+    }
+    updateCheckoutSidebar();
+  }
+
+  function setPromoMessage(msg, type) {
+    if (!promoMessage) return;
+    promoMessage.textContent = msg;
+    promoMessage.className = `promo-message ${type}`;
+  }
+
+  if (promoApplyBtn) {
+    promoApplyBtn.addEventListener('click', applyPromoCode);
+  }
+  if (promoCodeInput) {
+    promoCodeInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        applyPromoCode();
+      }
     });
   }
+
+  // Shipping Speed Toggle
+  document.querySelectorAll('input[name="shipping-speed"]').forEach(radio => {
+    radio.addEventListener('change', () => {
+      if (radio.value === 'express') {
+        if (speedOptExp) speedOptExp.classList.add('active');
+        if (speedOptStd) speedOptStd.classList.remove('active');
+        checkoutShipping.speed = 'express';
+        checkoutShipping.speedPrice = 4.99;
+      } else {
+        if (speedOptStd) speedOptStd.classList.add('active');
+        if (speedOptExp) speedOptExp.classList.remove('active');
+        checkoutShipping.speed = 'standard';
+        checkoutShipping.speedPrice = 0.00;
+      }
+      playSound('beep', 480, 0.05);
+      updateCheckoutSidebar();
+    });
+  });
+
+  // Validation Error Helpers
+  function setFieldError(fieldId, errorMsg) {
+    const input = document.getElementById(fieldId);
+    const errSpan = document.getElementById('err-' + fieldId);
+    if (input) input.classList.add('input-error');
+    if (errSpan) errSpan.textContent = errorMsg;
+  }
+
+  function clearFieldError(fieldId) {
+    const input = document.getElementById(fieldId);
+    const errSpan = document.getElementById('err-' + fieldId);
+    if (input) input.classList.remove('input-error');
+    if (errSpan) errSpan.textContent = '';
+  }
+
+  [
+    'ship-fname', 'ship-lname', 'ship-email', 'ship-phone',
+    'ship-address', 'ship-city', 'ship-state', 'ship-zip',
+    'card-num', 'card-name', 'card-exp', 'card-cvv', 'upi-id'
+  ].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.addEventListener('input', () => clearFieldError(id));
+      el.addEventListener('focus', () => clearFieldError(id));
+    }
+  });
+
+  // Validate Step 1 (Shipping Form)
+  function validateShippingStep() {
+    let isValid = true;
+
+    const fname = shipFname ? shipFname.value.trim() : '';
+    const lname = shipLname ? shipLname.value.trim() : '';
+    const email = shipEmail ? shipEmail.value.trim() : '';
+    const phone = shipPhone ? shipPhone.value.trim() : '';
+    const address = shipAddress ? shipAddress.value.trim() : '';
+    const city = shipCity ? shipCity.value.trim() : '';
+    const state = shipState ? shipState.value.trim() : '';
+    const zip = shipZip ? shipZip.value.trim() : '';
+
+    if (!fname) {
+      setFieldError('ship-fname', 'First name is required');
+      isValid = false;
+    }
+    if (!lname) {
+      setFieldError('ship-lname', 'Last name is required');
+      isValid = false;
+    }
+    if (!email || !/\S+@\S+\.\S+/.test(email)) {
+      setFieldError('ship-email', 'Valid email required for delivery updates');
+      isValid = false;
+    }
+    if (!phone || phone.replace(/\D/g, '').length < 7) {
+      setFieldError('ship-phone', 'Valid phone required for courier SMS');
+      isValid = false;
+    }
+    if (!address) {
+      setFieldError('ship-address', 'Street address is required');
+      isValid = false;
+    }
+    if (!city) {
+      setFieldError('ship-city', 'City is required');
+      isValid = false;
+    }
+    if (!state) {
+      setFieldError('ship-state', 'State / Province is required');
+      isValid = false;
+    }
+    if (!zip || zip.length < 3) {
+      setFieldError('ship-zip', 'Postal code is required');
+      isValid = false;
+    }
+
+    if (isValid) {
+      checkoutShipping = {
+        ...checkoutShipping,
+        fname,
+        lname,
+        email,
+        phone,
+        address,
+        city,
+        state,
+        zip
+      };
+    }
+
+    return isValid;
+  }
+
+  if (shippingForm) {
+    shippingForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (validateShippingStep()) {
+        playSound('beep', 600, 0.06);
+        setCheckoutStep(2);
+      } else {
+        playSound('beep', 280, 0.1);
+      }
+    });
+  }
+
+  if (step1CancelBtn) {
+    step1CancelBtn.addEventListener('click', () => {
+      closeCheckoutModal();
+      openCart();
+    });
+  }
+
+  // Step 2: Payment Methods Tab Switching
+  paymentTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const targetMethod = tab.getAttribute('data-payment-tab');
+      paymentTabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+
+      paymentPanels.forEach(p => {
+        if (p.getAttribute('data-panel') === targetMethod) {
+          p.classList.add('active');
+        } else {
+          p.classList.remove('active');
+        }
+      });
+
+      checkoutPayment.method = targetMethod;
+      playSound('beep', 520, 0.05);
+    });
+  });
+
+  // Card input auto-formatting & brand detection
+  if (cardNum) {
+    cardNum.addEventListener('input', (e) => {
+      let raw = e.target.value.replace(/\D/g, '').substring(0, 16);
+      let formatted = raw.match(/.{1,4}/g)?.join(' ') || raw;
+      e.target.value = formatted;
+
+      if (cardBrandIcon) {
+        if (raw.startsWith('4')) {
+          cardBrandIcon.textContent = '💳 Visa';
+        } else if (/^5[1-5]/.test(raw)) {
+          cardBrandIcon.textContent = '💳 MC';
+        } else if (/^3[47]/.test(raw)) {
+          cardBrandIcon.textContent = '💳 Amex';
+        } else {
+          cardBrandIcon.textContent = '💳';
+        }
+      }
+    });
+  }
+
+  // Card Expiry auto-formatting (MM/YY)
+  if (cardExp) {
+    cardExp.addEventListener('input', (e) => {
+      let raw = e.target.value.replace(/\D/g, '').substring(0, 4);
+      if (raw.length >= 2) {
+        e.target.value = raw.substring(0, 2) + '/' + raw.substring(2);
+      } else {
+        e.target.value = raw;
+      }
+    });
+  }
+
+  // Card CVV length restriction
+  if (cardCvv) {
+    cardCvv.addEventListener('input', (e) => {
+      e.target.value = e.target.value.replace(/\D/g, '').substring(0, 4);
+    });
+  }
+
+  // Validate Step 2 (Payment Form)
+  function validatePaymentStep() {
+    let isValid = true;
+    const method = checkoutPayment.method;
+
+    if (method === 'card') {
+      const numRaw = cardNum ? cardNum.value.replace(/\s/g, '') : '';
+      const nameVal = cardName ? cardName.value.trim() : '';
+      const expVal = cardExp ? cardExp.value.trim() : '';
+      const cvvVal = cardCvv ? cardCvv.value.trim() : '';
+
+      if (numRaw.length < 15) {
+        setFieldError('card-num', 'Enter a valid 15-16 digit card number');
+        isValid = false;
+      }
+      if (!nameVal) {
+        setFieldError('card-name', 'Cardholder name is required');
+        isValid = false;
+      }
+      if (!expVal || !/^\d{2}\/\d{2}$/.test(expVal)) {
+        setFieldError('card-exp', 'Valid MM/YY required');
+        isValid = false;
+      }
+      if (!cvvVal || cvvVal.length < 3) {
+        setFieldError('card-cvv', 'CVV required');
+        isValid = false;
+      }
+
+      if (isValid) {
+        checkoutPayment.cardNum = numRaw;
+        checkoutPayment.cardName = nameVal;
+        checkoutPayment.cardExp = expVal;
+        checkoutPayment.cardCvv = cvvVal;
+      }
+    } else if (method === 'upi') {
+      const upiVal = upiId ? upiId.value.trim() : '';
+      if (!upiVal || !upiVal.includes('@')) {
+        setFieldError('upi-id', 'Enter a valid UPI ID (e.g. name@okhdfcbank)');
+        isValid = false;
+      } else {
+        checkoutPayment.upiId = upiVal;
+      }
+    } else if (method === 'cod') {
+      isValid = true;
+    }
+
+    return isValid;
+  }
+
+  if (step2BackBtn) {
+    step2BackBtn.addEventListener('click', () => {
+      setCheckoutStep(1);
+    });
+  }
+
+  if (step2NextBtn) {
+    step2NextBtn.addEventListener('click', () => {
+      if (validatePaymentStep()) {
+        playSound('beep', 600, 0.06);
+        setCheckoutStep(3);
+      } else {
+        playSound('beep', 280, 0.1);
+      }
+    });
+  }
+
+  // Step 3: Populate Review Summary
+  function populateReviewStep() {
+    // Shipping Address Review
+    if (reviewShippingSummary) {
+      reviewShippingSummary.innerHTML = `
+        <strong>${checkoutShipping.fname} ${checkoutShipping.lname}</strong><br>
+        ${checkoutShipping.address}, ${checkoutShipping.city}, ${checkoutShipping.state} ${checkoutShipping.zip}<br>
+        <span style="color:#94A3B8;">Phone:</span> ${checkoutShipping.phone} • <span style="color:#94A3B8;">Email:</span> ${checkoutShipping.email}
+      `;
+    }
+
+    // Payment & Transit Review
+    if (reviewPaymentSummary) {
+      let paymentText = '';
+      if (checkoutPayment.method === 'card') {
+        const last4 = (checkoutPayment.cardNum || '8892').slice(-4);
+        paymentText = `💳 Credit/Debit Card (Ending in •••• ${last4})`;
+      } else if (checkoutPayment.method === 'upi') {
+        paymentText = `⚡ UPI Direct Collect (${checkoutPayment.upiId || 'Direct App'})`;
+      } else {
+        paymentText = `💵 Cash on Delivery (Pay upon arrival)`;
+      }
+
+      const speedText = checkoutShipping.speed === 'express'
+        ? '🚀 Hyper-Velocity Flight Courier (Next Day by 10 AM, +$4.99)'
+        : '⚡ Standard Bio-Transit (2-3 Business Days, FREE)';
+
+      reviewPaymentSummary.innerHTML = `
+        ${paymentText}<br>
+        <span style="color:#94A3B8;">Transit:</span> ${speedText}
+      `;
+    }
+
+    // Items list in Step 3
+    if (reviewItemsList) {
+      reviewItemsList.innerHTML = '';
+      cart.forEach(item => {
+        const row = document.createElement('div');
+        row.className = 'review-item-row';
+        row.innerHTML = `
+          <img src="${item.image}" alt="${item.name}" class="review-item-thumb">
+          <div class="review-item-details">
+            <span class="review-item-title">${item.name}</span>
+            <span class="review-item-qty">Quantity: ${item.qty}</span>
+          </div>
+          <span class="review-item-cost">$${(item.price * item.qty).toFixed(2)}</span>
+        `;
+        reviewItemsList.appendChild(row);
+      });
+    }
+
+    const { grandTotal } = getCheckoutTotals();
+    if (placeOrderTotalBtn) placeOrderTotalBtn.textContent = `$${grandTotal.toFixed(2)}`;
+  }
+
+  if (editShippingBtn) {
+    editShippingBtn.addEventListener('click', () => setCheckoutStep(1));
+  }
+  if (editPaymentBtn) {
+    editPaymentBtn.addEventListener('click', () => setCheckoutStep(2));
+  }
+  if (step3BackBtn) {
+    step3BackBtn.addEventListener('click', () => setCheckoutStep(2));
+  }
+
+  // Step 3: Transmit and Place Order (Transitions to Success Step)
+  if (placeOrderBtn) {
+    placeOrderBtn.addEventListener('click', () => {
+      placeOrderBtn.disabled = true;
+      const originalText = placeOrderBtn.innerHTML;
+      placeOrderBtn.innerHTML = `⚡ TRANSMITTING TO DISPATCH...`;
+      playSound('chime');
+
+      setTimeout(() => {
+        // Generate Order Tracking ID
+        const orderId = `#VLX-${Math.floor(100000 + Math.random() * 900000)}`;
+
+        // Calculate delivery estimate
+        const deliveryDate = new Date();
+        const daysToAdd = checkoutShipping.speed === 'express' ? 1 : 3;
+        deliveryDate.setDate(deliveryDate.getDate() + daysToAdd);
+        const options = { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' };
+        const formattedDate = deliveryDate.toLocaleDateString('en-US', options) +
+          (checkoutShipping.speed === 'express' ? ' (by 10:00 AM Priority Flight)' : ' (2-3 Business Days)');
+
+        let paymentStatus = 'CONFIRMED (PAID)';
+        if (checkoutPayment.method === 'cod') {
+          paymentStatus = 'PENDING (Pay at Doorstep)';
+        }
+
+        const { grandTotal } = getCheckoutTotals();
+
+        // Populate Success Confirmation Card
+        if (successCustomerName) successCustomerName.textContent = checkoutShipping.fname || 'Valued Athlete';
+        if (receiptOrderId) receiptOrderId.textContent = orderId;
+        if (receiptDeliveryDate) receiptDeliveryDate.textContent = formattedDate;
+        if (receiptPaymentStatus) {
+          receiptPaymentStatus.textContent = paymentStatus;
+          receiptPaymentStatus.style.color = checkoutPayment.method === 'cod' ? '#FFB703' : 'var(--success)';
+        }
+        if (receiptShippingMethod) {
+          receiptShippingMethod.textContent = checkoutShipping.speed === 'express'
+            ? 'Hyper-Velocity Courier ($4.99)'
+            : 'Standard Bio-Transit (Free)';
+        }
+        if (receiptTotalAmount) receiptTotalAmount.textContent = `$${grandTotal.toFixed(2)}`;
+
+        // Itemized list in receipt
+        if (receiptItemsPreview) {
+          receiptItemsPreview.innerHTML = '<div style="font-size:0.78rem; font-weight:700; color:#94A3B8; margin-bottom:8px; letter-spacing:0.05em;">ORDERED ITEMS:</div>';
+          cart.forEach(item => {
+            const row = document.createElement('div');
+            row.style.cssText = 'display:flex; justify-content:space-between; align-items:center; font-size:0.85rem; padding:6px 0; border-bottom:1px dashed rgba(255,255,255,0.08);';
+            row.innerHTML = `
+              <span>${item.qty}x ${item.name}</span>
+              <span style="font-family:var(--font-mono); font-weight:600; color:var(--text-white);">$${(item.price * item.qty).toFixed(2)}</span>
+            `;
+            receiptItemsPreview.appendChild(row);
+          });
+        }
+
+        // Empty cart and update drawer
+        cart = [];
+        renderCart();
+
+        // Switch to celebration step
+        setCheckoutStep('success');
+        playSound('chime');
+        showToast(`🎉 Order ${orderId} placed successfully! Receipt sent.`);
+
+        placeOrderBtn.disabled = false;
+        placeOrderBtn.innerHTML = originalText;
+      }, 900);
+    });
+  }
+
+  // Step 4 Actions: Continue & Print
+  if (successContinueBtn) {
+    successContinueBtn.addEventListener('click', () => {
+      closeCheckoutModal();
+      setCheckoutStep(1);
+    });
+  }
+
+  if (successPrintBtn) {
+    successPrintBtn.addEventListener('click', () => {
+      window.print();
+    });
+  }
+
+  // Modal Open & Close Event Triggers
+  if (checkoutBtn) {
+    checkoutBtn.addEventListener('click', () => {
+      openCheckoutModal();
+    });
+  }
+
+  if (checkoutModalCloseBtn) {
+    checkoutModalCloseBtn.addEventListener('click', closeCheckoutModal);
+  }
+
+  if (checkoutModalOverlay) {
+    checkoutModalOverlay.addEventListener('click', (e) => {
+      if (e.target === checkoutModalOverlay) {
+        closeCheckoutModal();
+      }
+    });
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && checkoutModalOverlay && checkoutModalOverlay.classList.contains('open')) {
+      closeCheckoutModal();
+    }
+  });
 
   // --------------------------------------------------------------------------
   // TOAST NOTIFICATION
