@@ -11,7 +11,7 @@
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2300FF87'><path d='M13 2L3 14h7v8l10-12h-7z'/></svg>">
 
   <!-- Stylesheet -->
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=2.2">
 </head>
 <body data-flavor="lime">
 
@@ -65,10 +65,47 @@
           <span class="cart-badge" id="cart-badge">1</span>
         </button>
 
-        <a href="#bundle-builder" class="btn btn-primary" style="padding: 10px 22px; font-size: 0.88rem;">ORDER NOW</a>
+        <!-- Desktop Order Button -->
+        <a href="#bundle-builder" class="btn btn-primary nav-order-btn">ORDER NOW</a>
+
+        <!-- Mobile Navigation Menu Toggle Button -->
+        <button class="mobile-nav-toggle" id="mobile-nav-toggle" aria-label="Toggle navigation menu">
+          <span class="hamburger-bar"></span>
+          <span class="hamburger-bar"></span>
+          <span class="hamburger-bar"></span>
+        </button>
       </div>
     </div>
   </header>
+
+  <!-- Mobile Navigation Drawer & Backdrop -->
+  <div class="mobile-nav-backdrop" id="mobile-nav-backdrop"></div>
+  <aside class="mobile-nav-drawer" id="mobile-nav-drawer" aria-label="Mobile Navigation Menu">
+    <div class="mobile-nav-header">
+      <a href="#" class="logo-wrapper">
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24"><path d="M13 2L3 14h7v8l10-12h-7z"/></svg>
+        </div>
+        <div class="logo-text">VOLTIX</div>
+      </a>
+      <button class="mobile-nav-close" id="mobile-nav-close" aria-label="Close navigation menu">&times;</button>
+    </div>
+
+    <ul class="mobile-nav-links">
+      <li><a href="#hero" class="mobile-nav-link active">Home</a></li>
+      <li><a href="#formula" class="mobile-nav-link">The Formula</a></li>
+      <li><a href="#flavors" class="mobile-nav-link">Flavors (6 Formulas)</a></li>
+      <li><a href="#bundle-builder" class="mobile-nav-link">Build 12-Pack</a></li>
+      <li><a href="#performance" class="mobile-nav-link">Athletes & Esports</a></li>
+      <li><a href="#faq" class="mobile-nav-link">FAQ & Guarantee</a></li>
+    </ul>
+
+    <div class="mobile-nav-footer">
+      <a href="#bundle-builder" class="btn btn-primary mobile-drawer-order-btn" style="width: 100%;">
+        ⚡ ORDER 12-PACK CASE
+      </a>
+    </div>
+  </aside>
 
   <!-- ==========================================================================
        HERO SECTION (3D FLAVOR STAGE)
@@ -126,6 +163,33 @@
                   <span class="flavor-btn-tag">Blood Orange + Passion</span>
                 </div>
               </button>
+
+              <!-- Frost (New) -->
+              <button class="flavor-btn" data-select="frost">
+                <span class="flavor-color-pip"></span>
+                <div class="flavor-btn-info">
+                  <span class="flavor-btn-name">Arctic Frost</span>
+                  <span class="flavor-btn-tag">Glacier Berry + Mint</span>
+                </div>
+              </button>
+
+              <!-- Mango (New) -->
+              <button class="flavor-btn" data-select="mango">
+                <span class="flavor-color-pip"></span>
+                <div class="flavor-btn-info">
+                  <span class="flavor-btn-name">Cyber Mango</span>
+                  <span class="flavor-btn-tag">Mango + Guarana</span>
+                </div>
+              </button>
+
+              <!-- Cherry (New) -->
+              <button class="flavor-btn" data-select="cherry">
+                <span class="flavor-color-pip"></span>
+                <div class="flavor-btn-info">
+                  <span class="flavor-btn-name">Quantum Cherry</span>
+                  <span class="flavor-btn-tag">Dark Cherry + Void</span>
+                </div>
+              </button>
             </div>
           </div>
 
@@ -137,6 +201,12 @@
             <button class="btn btn-outline" id="hero-add-single-btn">
               TRY SINGLE CAN ($3.49)
             </button>
+            <a href="#flavors" class="btn btn-explore-more" id="hero-explore-btn">
+              <span>EXPLORE MORE</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </a>
           </div>
 
           <!-- Trust Badges -->
@@ -305,22 +375,31 @@
   </section>
 
   <!-- ==========================================================================
-       FLAVORS SHOWCASE (THE TRIO)
+       FLAVORS SHOWCASE (THE SIX FORMULAS)
        ========================================================================== -->
   <section class="section" id="flavors" style="background: rgba(11, 14, 20, 0.4);">
     <div class="container">
       <div class="section-header">
         <div class="badge">SIGNATURE LINEUP</div>
-        <h2 class="section-title">THREE FORMULAS. <span class="gradient-text">ZERO COMPROMISE.</span></h2>
+        <h2 class="section-title">SIX BIO-ENHANCED FORMULAS. <span class="gradient-text">ZERO COMPROMISE.</span></h2>
         <p class="section-sub">
-          Each flavor is meticulously balanced with botanical infusions, zero sugar, and cold carbonation for maximum crispness.
+          Each flavor is meticulously balanced with botanical infusions, Lion's Mane nootropics, zero sugar, and cold carbonation for maximum crispness.
         </p>
+      </div>
+
+      <!-- Interactive Flavor Category Filter -->
+      <div class="flavors-filter-bar">
+        <button class="flavor-filter-pill active" data-filter="all">ALL FORMULAS (6)</button>
+        <button class="flavor-filter-pill" data-filter="bestseller">BESTSELLERS</button>
+        <button class="flavor-filter-pill" data-filter="new">NEW ARRIVALS</button>
+        <button class="flavor-filter-pill" data-filter="citrus">CITRUS & FRUIT</button>
+        <button class="flavor-filter-pill" data-filter="nootropic">HYPER NOOTROPIC</button>
       </div>
 
       <div class="flavors-grid">
         
         <!-- Flavor 1: Lime -->
-        <div class="flavor-product-card" data-card-flavor="lime">
+        <div class="flavor-product-card" data-card-flavor="lime" data-category="bestseller citrus">
           <span class="flavor-card-pill card-pill-lime">BESTSELLER</span>
           <div class="flavor-card-image-box">
             <img src="assets/can_lime.jpg" alt="Neon Citrus Energy Drink" class="flavor-card-img">
@@ -354,7 +433,7 @@
         </div>
 
         <!-- Flavor 2: Berry -->
-        <div class="flavor-product-card" data-card-flavor="berry">
+        <div class="flavor-product-card" data-card-flavor="berry" data-category="bestseller nootropic">
           <span class="flavor-card-pill card-pill-berry">DEEP FLOW</span>
           <div class="flavor-card-image-box">
             <img src="assets/can_berry.jpg" alt="Cosmic Berry Energy Drink" class="flavor-card-img">
@@ -388,7 +467,7 @@
         </div>
 
         <!-- Flavor 3: Orange -->
-        <div class="flavor-product-card" data-card-flavor="orange">
+        <div class="flavor-product-card" data-card-flavor="orange" data-category="citrus">
           <span class="flavor-card-pill card-pill-orange">HIGH STAMINA</span>
           <div class="flavor-card-image-box">
             <img src="assets/can_orange.jpg" alt="Solar Flare Energy Drink" class="flavor-card-img">
@@ -421,6 +500,118 @@
           </div>
         </div>
 
+        <!-- Flavor 4: Frost (New) -->
+        <div class="flavor-product-card" data-card-flavor="frost" data-category="new nootropic">
+          <span class="flavor-card-pill card-pill-frost">NEW ARRIVAL</span>
+          <div class="flavor-card-image-box">
+            <img src="assets/can_frost.jpg" alt="Arctic Frost Surge Energy Drink" class="flavor-card-img">
+          </div>
+          <h3 class="flavor-card-name">Arctic Frost Surge</h3>
+          <p class="flavor-card-notes">Sub-zero glacier raspberry with an ultra-crisp arctic mint finish for rapid mental clarity.</p>
+          
+          <div class="flavor-stats-row">
+            <div class="flavor-stat-item">
+              <span class="stat-key">SWEETNESS</span>
+              <span class="stat-val">Icy Crisp (2/5)</span>
+            </div>
+            <div class="flavor-stat-item">
+              <span class="stat-key">CAFFEINE</span>
+              <span class="stat-val">200mg</span>
+            </div>
+            <div class="flavor-stat-item">
+              <span class="stat-key">SUGAR</span>
+              <span class="stat-val">0 Grams</span>
+            </div>
+          </div>
+
+          <div class="flavor-card-footer">
+            <div>
+              <div class="flavor-price">$34.99 <span class="flavor-price-unit">/ 12-Pack</span></div>
+            </div>
+            <button class="btn btn-outline add-flavor-card-btn" data-flavor="frost" style="padding: 10px 18px; font-size: 0.85rem;">
+              + ADD CASE
+            </button>
+          </div>
+        </div>
+
+        <!-- Flavor 5: Mango (New) -->
+        <div class="flavor-product-card" data-card-flavor="mango" data-category="new citrus">
+          <span class="flavor-card-pill card-pill-mango">TROPICAL SURGE</span>
+          <div class="flavor-card-image-box">
+            <img src="assets/can_mango.jpg" alt="Cyber Mango Glitch Energy Drink" class="flavor-card-img">
+          </div>
+          <h3 class="flavor-card-name">Cyber Mango Glitch</h3>
+          <p class="flavor-card-notes">Alphonso mango nectar smashed with golden peach and Brazilian guarana for relentless power.</p>
+          
+          <div class="flavor-stats-row">
+            <div class="flavor-stat-item">
+              <span class="stat-key">SWEETNESS</span>
+              <span class="stat-val">Tropical (3/5)</span>
+            </div>
+            <div class="flavor-stat-item">
+              <span class="stat-key">CAFFEINE</span>
+              <span class="stat-val">200mg</span>
+            </div>
+            <div class="flavor-stat-item">
+              <span class="stat-key">SUGAR</span>
+              <span class="stat-val">0 Grams</span>
+            </div>
+          </div>
+
+          <div class="flavor-card-footer">
+            <div>
+              <div class="flavor-price">$34.99 <span class="flavor-price-unit">/ 12-Pack</span></div>
+            </div>
+            <button class="btn btn-outline add-flavor-card-btn" data-flavor="mango" style="padding: 10px 18px; font-size: 0.85rem;">
+              + ADD CASE
+            </button>
+          </div>
+        </div>
+
+        <!-- Flavor 6: Cherry (New) -->
+        <div class="flavor-product-card" data-card-flavor="cherry" data-category="new nootropic">
+          <span class="flavor-card-pill card-pill-cherry">LIMITED DROP</span>
+          <div class="flavor-card-image-box">
+            <img src="assets/can_cherry.jpg" alt="Quantum Cherry Void Energy Drink" class="flavor-card-img">
+          </div>
+          <h3 class="flavor-card-name">Quantum Cherry Void</h3>
+          <p class="flavor-card-notes">Dark wild cherries paired with midnight dragonfruit and L-Tyrosine to lock in deep cognitive flow.</p>
+          
+          <div class="flavor-stats-row">
+            <div class="flavor-stat-item">
+              <span class="stat-key">SWEETNESS</span>
+              <span class="stat-val">Velvet Tart (3/5)</span>
+            </div>
+            <div class="flavor-stat-item">
+              <span class="stat-key">CAFFEINE</span>
+              <span class="stat-val">200mg</span>
+            </div>
+            <div class="flavor-stat-item">
+              <span class="stat-key">SUGAR</span>
+              <span class="stat-val">0 Grams</span>
+            </div>
+          </div>
+
+          <div class="flavor-card-footer">
+            <div>
+              <div class="flavor-price">$34.99 <span class="flavor-price-unit">/ 12-Pack</span></div>
+            </div>
+            <button class="btn btn-outline add-flavor-card-btn" data-flavor="cherry" style="padding: 10px 18px; font-size: 0.85rem;">
+              + ADD CASE
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Explore More Custom Bundle CTA -->
+      <div class="flavors-explore-more-footer" style="text-align: center; margin-top: 48px;">
+        <p style="color: var(--text-secondary); margin-bottom: 16px; font-size: 0.95rem;">
+          Can't decide on just one? Mix & match any combination of all 6 kinetic formulas in your custom pack.
+        </p>
+        <a href="#bundle-builder" class="btn btn-primary" style="padding: 13px 32px; font-size: 0.95rem;">
+          ⚡ BUILD YOUR CUSTOM 6-FLAVOR 12-PACK CASE
+        </a>
       </div>
     </div>
   </section>
@@ -437,7 +628,7 @@
           <div class="badge" style="margin-bottom: 12px;">CUSTOM TASTE LAB</div>
           <h2 class="bundle-left-title">BUILD YOUR OWN <span class="gradient-text">12-CAN BUNDLE</span></h2>
           <p style="color: var(--text-secondary); margin-bottom: 24px; font-size: 0.95rem;">
-            Mix and match any proportion of our three signature flavors to suit your daily training and focus regimen.
+            Mix and match any proportion of our six signature formulas to suit your daily training and focus regimen.
           </p>
 
           <div class="bundle-progress-header">
@@ -463,7 +654,7 @@
               </div>
               <div class="bundle-counter">
                 <button class="counter-btn bundle-minus-btn" data-flavor="lime" data-action="minus" aria-label="Decrease Lime">-</button>
-                <span class="counter-num" id="bundle-count-lime">4</span>
+                <span class="counter-num" id="bundle-count-lime">2</span>
                 <button class="counter-btn bundle-plus-btn" data-flavor="lime" data-action="plus" aria-label="Increase Lime">+</button>
               </div>
             </div>
@@ -479,7 +670,7 @@
               </div>
               <div class="bundle-counter">
                 <button class="counter-btn bundle-minus-btn" data-flavor="berry" data-action="minus" aria-label="Decrease Berry">-</button>
-                <span class="counter-num" id="bundle-count-berry">4</span>
+                <span class="counter-num" id="bundle-count-berry">2</span>
                 <button class="counter-btn bundle-plus-btn" data-flavor="berry" data-action="plus" aria-label="Increase Berry">+</button>
               </div>
             </div>
@@ -495,8 +686,56 @@
               </div>
               <div class="bundle-counter">
                 <button class="counter-btn bundle-minus-btn" data-flavor="orange" data-action="minus" aria-label="Decrease Orange">-</button>
-                <span class="counter-num" id="bundle-count-orange">4</span>
+                <span class="counter-num" id="bundle-count-orange">2</span>
                 <button class="counter-btn bundle-plus-btn" data-flavor="orange" data-action="plus" aria-label="Increase Orange">+</button>
+              </div>
+            </div>
+
+            <!-- Row 4: Frost (New) -->
+            <div class="bundle-flavor-row">
+              <div class="bundle-row-info">
+                <img src="assets/can_frost.jpg" alt="Frost Thumb" class="bundle-thumb">
+                <div>
+                  <div class="bundle-row-name">Arctic Frost Surge</div>
+                  <div class="bundle-row-sub">Glacier Raspberry • Sub-Zero Mint</div>
+                </div>
+              </div>
+              <div class="bundle-counter">
+                <button class="counter-btn bundle-minus-btn" data-flavor="frost" data-action="minus" aria-label="Decrease Frost">-</button>
+                <span class="counter-num" id="bundle-count-frost">2</span>
+                <button class="counter-btn bundle-plus-btn" data-flavor="frost" data-action="plus" aria-label="Increase Frost">+</button>
+              </div>
+            </div>
+
+            <!-- Row 5: Mango (New) -->
+            <div class="bundle-flavor-row">
+              <div class="bundle-row-info">
+                <img src="assets/can_mango.jpg" alt="Mango Thumb" class="bundle-thumb">
+                <div>
+                  <div class="bundle-row-name">Cyber Mango Glitch</div>
+                  <div class="bundle-row-sub">Alphonso Mango • Brazilian Guarana</div>
+                </div>
+              </div>
+              <div class="bundle-counter">
+                <button class="counter-btn bundle-minus-btn" data-flavor="mango" data-action="minus" aria-label="Decrease Mango">-</button>
+                <span class="counter-num" id="bundle-count-mango">2</span>
+                <button class="counter-btn bundle-plus-btn" data-flavor="mango" data-action="plus" aria-label="Increase Mango">+</button>
+              </div>
+            </div>
+
+            <!-- Row 6: Cherry (New) -->
+            <div class="bundle-flavor-row">
+              <div class="bundle-row-info">
+                <img src="assets/can_cherry.jpg" alt="Cherry Thumb" class="bundle-thumb">
+                <div>
+                  <div class="bundle-row-name">Quantum Cherry Void</div>
+                  <div class="bundle-row-sub">Dark Cherry • Midnight Dragonfruit</div>
+                </div>
+              </div>
+              <div class="bundle-counter">
+                <button class="counter-btn bundle-minus-btn" data-flavor="cherry" data-action="minus" aria-label="Decrease Cherry">-</button>
+                <span class="counter-num" id="bundle-count-cherry">2</span>
+                <button class="counter-btn bundle-plus-btn" data-flavor="cherry" data-action="plus" aria-label="Increase Cherry">+</button>
               </div>
             </div>
 
@@ -755,12 +994,15 @@
 
         <!-- Col 1 -->
         <div>
-          <h4 class="footer-col-title">Flavors</h4>
+          <h4 class="footer-col-title">Flavors (6 Formulas)</h4>
           <ul class="footer-links-list">
-            <li><a href="#hero">Neon Citrus Charge</a></li>
-            <li><a href="#hero">Cosmic Berry Warp</a></li>
-            <li><a href="#hero">Solar Flare Rush</a></li>
-            <li><a href="#bundle-builder">Custom 12-Pack</a></li>
+            <li><a href="#hero" class="footer-flavor-link" data-select="lime">Neon Citrus Charge</a></li>
+            <li><a href="#hero" class="footer-flavor-link" data-select="berry">Cosmic Berry Warp</a></li>
+            <li><a href="#hero" class="footer-flavor-link" data-select="orange">Solar Flare Rush</a></li>
+            <li><a href="#hero" class="footer-flavor-link" data-select="frost">Arctic Frost Surge</a></li>
+            <li><a href="#hero" class="footer-flavor-link" data-select="mango">Cyber Mango Glitch</a></li>
+            <li><a href="#hero" class="footer-flavor-link" data-select="cherry">Quantum Cherry Void</a></li>
+            <li><a href="#bundle-builder">Custom 12-Pack Builder</a></li>
           </ul>
         </div>
 
@@ -790,7 +1032,7 @@
 
       <div class="footer-bottom">
         <div>&copy; 2026 VOLTIX KINETIC LABS INC. ALL RIGHTS RESERVED.</div>
-        <div style="display: flex; gap: 20px;">
+        <div class="footer-legal-links">
           <span>Privacy Policy</span>
           <span>Terms of Service</span>
           <span>FDA Compliance Statement</span>

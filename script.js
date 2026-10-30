@@ -1,3 +1,4 @@
+// @ts-nocheck
 /* ==========================================================================
    VOLTIX ENERGY - INTERACTIVE CORE ENGINE (SCRIPT.JS)
    ========================================================================== */
@@ -53,6 +54,54 @@ document.addEventListener('DOMContentLoaded', () => {
       notes: 'Sun-ripened Sicilian blood orange smashed with exotic passionfruit for an explosive rush of tropical adrenaline.',
       sweetness: 'Zesty Citrus (3/5)',
       intensity: 'Explosive Stamina (5/5)',
+      price: '$3.49'
+    },
+    frost: {
+      id: 'frost',
+      name: 'Arctic Frost Surge',
+      shortName: 'Arctic Frost',
+      tagline: 'Glacier Blue Raspberry + Sub-Zero Mint',
+      caffeine: '200mg',
+      sugar: '0g',
+      calories: '5',
+      image: 'assets/can_frost.jpg',
+      themeColor: '#00D2FF',
+      secondaryColor: '#0077FF',
+      notes: 'Sub-zero glacier raspberry with an ultra-crisp arctic mint finish designed to lower mental fatigue and hydrate fast.',
+      sweetness: 'Icy Crisp (2/5)',
+      intensity: 'Cool Focus (4/5)',
+      price: '$3.49'
+    },
+    mango: {
+      id: 'mango',
+      name: 'Cyber Mango Glitch',
+      shortName: 'Cyber Mango',
+      tagline: 'Alphonso Mango + Golden Nectar + Guarana',
+      caffeine: '200mg',
+      sugar: '0g',
+      calories: '5',
+      image: 'assets/can_mango.jpg',
+      themeColor: '#FFB703',
+      secondaryColor: '#FB8500',
+      notes: 'Hyper-saturated Alphonso mango and golden peach nectar turbocharged with natural Brazilian guarana for unstoppable stamina.',
+      sweetness: 'Tropical Nectar (3/5)',
+      intensity: 'High Adrenaline (5/5)',
+      price: '$3.49'
+    },
+    cherry: {
+      id: 'cherry',
+      name: 'Quantum Cherry Void',
+      shortName: 'Quantum Cherry',
+      tagline: 'Dark Wild Cherry + Midnight Dragonfruit',
+      caffeine: '200mg',
+      sugar: '0g',
+      calories: '5',
+      image: 'assets/can_cherry.jpg',
+      themeColor: '#FF0055',
+      secondaryColor: '#990033',
+      notes: 'Mystic dark black cherries blended with crushed dragonfruit and L-Tyrosine to lock you into impenetrable deep cognitive flow.',
+      sweetness: 'Velvet Tart (3/5)',
+      intensity: 'Quantum Focus (5/5)',
       price: '$3.49'
     }
   };
@@ -436,15 +485,12 @@ document.addEventListener('DOMContentLoaded', () => {
   // CUSTOM 12-PACK BUNDLE BUILDER
   // --------------------------------------------------------------------------
   const bundleCounts = {
-    lime: 4,
-    berry: 4,
-    orange: 4
-  };
-
-  const countElements = {
-    lime: document.getElementById('bundle-count-lime'),
-    berry: document.getElementById('bundle-count-berry'),
-    orange: document.getElementById('bundle-count-orange')
+    lime: 2,
+    berry: 2,
+    orange: 2,
+    frost: 2,
+    mango: 2,
+    cherry: 2
   };
 
   const bundleProgressFill = document.getElementById('bundle-progress-fill');
@@ -452,11 +498,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const bundleAddBtn = document.getElementById('bundle-add-to-cart-btn');
 
   function updateBundleUI() {
-    const total = bundleCounts.lime + bundleCounts.berry + bundleCounts.orange;
+    const total = Object.values(bundleCounts).reduce((a, b) => a + b, 0);
 
-    if (countElements.lime) countElements.lime.textContent = bundleCounts.lime;
-    if (countElements.berry) countElements.berry.textContent = bundleCounts.berry;
-    if (countElements.orange) countElements.orange.textContent = bundleCounts.orange;
+    Object.keys(bundleCounts).forEach(flavor => {
+      const el = document.getElementById(`bundle-count-${flavor}`);
+      if (el) el.textContent = String(bundleCounts[flavor]);
+    });
 
     if (bundleTotalLabel) bundleTotalLabel.textContent = `${total} / 12 CANS SELECTED`;
 
@@ -471,7 +518,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Disable minus buttons if at 0
     document.querySelectorAll('.bundle-minus-btn').forEach(btn => {
       const flavor = btn.getAttribute('data-flavor');
-      btn.disabled = bundleCounts[flavor] <= 0;
+      btn.disabled = (bundleCounts[flavor] || 0) <= 0;
     });
 
     if (bundleAddBtn) {
@@ -489,12 +536,12 @@ document.addEventListener('DOMContentLoaded', () => {
     btn.addEventListener('click', () => {
       const flavor = btn.getAttribute('data-flavor');
       const action = btn.getAttribute('data-action');
-      const total = bundleCounts.lime + bundleCounts.berry + bundleCounts.orange;
+      const total = Object.values(bundleCounts).reduce((a, b) => a + b, 0);
 
       if (action === 'plus' && total < 12) {
-        bundleCounts[flavor]++;
+        bundleCounts[flavor] = (bundleCounts[flavor] || 0) + 1;
         playSound('beep', 480, 0.08);
-      } else if (action === 'minus' && bundleCounts[flavor] > 0) {
+      } else if (action === 'minus' && (bundleCounts[flavor] || 0) > 0) {
         bundleCounts[flavor]--;
         playSound('beep', 360, 0.08);
       }
@@ -687,16 +734,107 @@ document.addEventListener('DOMContentLoaded', () => {
   // Bundle Add
   if (bundleAddBtn) {
     bundleAddBtn.addEventListener('click', () => {
-      const summary = `Custom 12-Pack (${bundleCounts.lime} Lime, ${bundleCounts.berry} Berry, ${bundleCounts.orange} Orange)`;
+      const breakdown = Object.entries(bundleCounts)
+        .filter(([_, count]) => count > 0)
+        .map(([flv, count]) => `${count}x ${FLAVORS[flv] ? FLAVORS[flv].shortName : flv}`)
+        .join(', ');
+      const summary = `Custom 12-Pack (${breakdown || '12-Pack'})`;
       addToCart({
         id: `custom-bundle-${Date.now()}`,
         name: summary,
         flavor: 'custom',
         price: 34.99,
-        image: 'assets/can_lime.jpg'
+        image: 'assets/can_frost.jpg'
       });
     });
   }
+
+  // --------------------------------------------------------------------------
+  // FLAVOR FILTER TABS & EXPLORE MORE BUTTON
+  // --------------------------------------------------------------------------
+  const filterPills = document.querySelectorAll('.flavor-filter-pill');
+  const flavorCards = document.querySelectorAll('.flavor-product-card');
+
+  filterPills.forEach(pill => {
+    pill.addEventListener('click', () => {
+      filterPills.forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+      const filter = pill.getAttribute('data-filter');
+      playSound('beep', 500, 0.06);
+
+      flavorCards.forEach(card => {
+        const cat = card.getAttribute('data-category') || '';
+        if (filter === 'all' || cat.includes(filter)) {
+          card.style.display = 'flex';
+          card.style.opacity = '0';
+          card.style.transform = 'translateY(12px)';
+          setTimeout(() => {
+            card.style.transition = 'opacity 0.28s ease, transform 0.28s ease';
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+          }, 20);
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+  });
+
+  const exploreMoreBtn = document.getElementById('hero-explore-btn');
+  if (exploreMoreBtn) {
+    exploreMoreBtn.addEventListener('click', () => {
+      playSound('beep', 520, 0.08);
+    });
+  }
+
+  // Footer flavor direct links
+  document.querySelectorAll('.footer-flavor-link').forEach(link => {
+    link.addEventListener('click', (e) => {
+      const flv = link.getAttribute('data-select');
+      if (flv && FLAVORS[flv]) {
+        setFlavor(flv);
+      }
+    });
+  });
+
+  // --------------------------------------------------------------------------
+  // MOBILE NAVIGATION DRAWER
+  // --------------------------------------------------------------------------
+  const mobileNavToggle = document.getElementById('mobile-nav-toggle');
+  const mobileNavDrawer = document.getElementById('mobile-nav-drawer');
+  const mobileNavBackdrop = document.getElementById('mobile-nav-backdrop');
+  const mobileNavClose = document.getElementById('mobile-nav-close');
+  const mobileNavLinks = document.querySelectorAll('.mobile-nav-link, .mobile-drawer-order-btn');
+
+  function openMobileNav() {
+    if (mobileNavDrawer) mobileNavDrawer.classList.add('open');
+    if (mobileNavBackdrop) mobileNavBackdrop.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    playSound('beep', 520, 0.05);
+  }
+
+  function closeMobileNav() {
+    if (mobileNavDrawer) mobileNavDrawer.classList.remove('open');
+    if (mobileNavBackdrop) mobileNavBackdrop.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  if (mobileNavToggle) mobileNavToggle.addEventListener('click', openMobileNav);
+  if (mobileNavClose) mobileNavClose.addEventListener('click', closeMobileNav);
+  if (mobileNavBackdrop) mobileNavBackdrop.addEventListener('click', closeMobileNav);
+
+  mobileNavLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      closeMobileNav();
+      const href = link.getAttribute('href');
+      if (href && href.startsWith('#')) {
+        const target = document.querySelector(href);
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }
+    });
+  });
 
   // Checkout Simulator
   if (checkoutBtn) {
